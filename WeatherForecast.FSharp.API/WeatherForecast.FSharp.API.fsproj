@@ -15,6 +15,7 @@
     <Compile Include="Types\Weather.fs" />
     <Compile Include="Types\Database.fs" />
     <Compile Include="Modules\Encryption.fs" />
+    <Compile Include="Modules\JwtOptions.fs" />
     <Compile Include="Modules\Authentication.fs" />
     <Compile Include="Modules\WeatherForecast.fs" />
     <Compile Include="Modules\Account.fs" />
