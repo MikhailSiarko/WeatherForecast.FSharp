@@ -5,7 +5,7 @@ open System.Runtime.CompilerServices
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.IdentityModel.Tokens
-open WeatherForecast.FSharp.API.Types.Authentication
+open WeatherForecast.FSharp.API.Modules
 open FluentMigrator.Runner
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
