@@ -11,9 +11,7 @@ type Startup (configuration: IConfiguration) =
     member __.ConfigureServices(services: IServiceCollection) =
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
         services.AddScoped<WeatherForecast>() |> ignore
-        services.AddApplicationDatabaseMigration(configuration) |> ignore
         services.AddApplicationAuthentication() |> ignore
-        services.ApplyMigrations() |> ignore
 
     member __.Configure(app: IApplicationBuilder) =
         app.UseMiddleware<ExeptionHandlingMiddleware>() |> ignore

@@ -1,14 +1,11 @@
 ﻿namespace WeatherForecast.FSharp.API.Infrastructure
 
-open System.Reflection
 open System.Runtime.CompilerServices
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.IdentityModel.Tokens
 open WeatherForecast.FSharp.API.Modules
-open FluentMigrator.Runner
 open Microsoft.AspNetCore.Builder
-open Microsoft.Extensions.Configuration
 
 [<Extension>]
 type IServiceCollectionExtensions () =
@@ -29,23 +26,6 @@ type IServiceCollectionExtensions () =
                                             ValidateIssuerSigningKey = true
                                         )
                          )
-
-    [<Extension>]
-    static member inline AddApplicationDatabaseMigration(services: IServiceCollection, configuration: IConfiguration) =
-        services.AddFluentMigratorCore().ConfigureRunner(
-            fun builder ->
-                builder
-                    .AddSQLite()
-                    .WithGlobalConnectionString(configuration.GetConnectionString("Default"))
-                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations
-                |> ignore
-        )
-
-    [<Extension>]
-    static member inline ApplyMigrations(services: IServiceCollection) =
-        use scope = services.BuildServiceProvider(false).CreateScope()
-        let runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>()
-        if runner.HasMigrationsToApplyUp() then runner.MigrateUp()
 
 [<Extension>]
 type IApplicationBuilderExtensions () =

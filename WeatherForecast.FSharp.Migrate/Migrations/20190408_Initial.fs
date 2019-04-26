@@ -1,4 +1,4 @@
-namespace WeatherForecast.FSharp.API.Migrations
+namespace WeatherForecast.FSharp.Migrate.Migrations
 
 open FluentMigrator
 
@@ -13,13 +13,23 @@ type Initial () =
             .WithColumn("Password").AsString().NotNullable()
             |> ignore
 
+        this.Create
+            .Table("Forecasts")
+            .WithColumn("Id").AsInt32().Indexed("IX_Forecasts_Id").Identity().PrimaryKey("PK_Forecasts").NotNullable()
+            .WithColumn("CountryCode").AsFixedLengthString(10).NotNullable()
+            .WithColumn("Location").AsFixedLengthString(100).NotNullable()
+            .WithColumn("Created").AsDateTime().NotNullable()
+        |> ignore
+
         this.Create.Table("ForecastItems")
             .WithColumn("Id").AsInt32().Indexed("IX_ForecastItems_Id").Identity().PrimaryKey("PK_ForecastItems").NotNullable()
-            .WithColumn("UserId").AsInt32().Indexed("IX_ForecastItems_UserId").ForeignKey("FK_ForecastItems_Users_Id", "Users", "Id")
+            .WithColumn("ForecastId").AsInt32().Indexed("IX_ForecastItems_ForecastId").ForeignKey("FK_ForecastItems_Forecasts_Id", "Forecasts", "Id").NotNullable()
+            .WithColumn("Data").AsString().NotNullable()
             |> ignore
         ()
 
     override this.Down() =
         this.Delete.Table("ForecastItems") |> ignore
+        this.Delete.Table("Forecasts") |> ignore
         this.Delete.Table("Users") |> ignore
         ()

@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Migrations\20190408_Initial.fs" />
     <Compile Include="Types\Application.fs" />
     <Compile Include="Types\AuthenticationTypes.fs" />
     <Compile Include="Types\Weather.fs" />
@@ -27,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.1" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.1" />
-    <PackageReference Include="FluentMigrator.Runner.Core" Version="3.2.1" />
-    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.2.1" />
     <PackageReference Include="FSharp.Data" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.110" />
