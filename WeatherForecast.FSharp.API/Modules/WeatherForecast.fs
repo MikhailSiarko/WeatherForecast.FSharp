@@ -11,14 +11,14 @@ type WeatherForecast (configuration: IConfiguration, weatherService: WeatherAPIS
         let lastEligibleTime = DateTimeOffset.Now.AddMinutes(-1.0 * expirationTime).DateTime
         let! forecast = Database.tryGetForecastAsync countryCode city
         match forecast with
-        | Some f when f.Created >= lastEligibleTime -> return Mapping.forecast f
+        | Some f when f.Created >= lastEligibleTime -> return Mapping.toForecast f
         | Some f -> Database.clearUpdates ()
                     do! Database.deleteItemsAsync f.Id
                     let! items = Database.createItemsAsync weatherService.Load countryCode city f.Id
                     do! Database.update f
-                    return Mapping.forecast f
+                    return Mapping.toForecast f
         | None -> Database.clearUpdates ()
                   let! forecast = Database.createForecast countryCode city
                   do! Database.createItemsAsync weatherService.Load countryCode city forecast.Id
-                  return Mapping.forecast forecast
+                  return Mapping.toForecast forecast
     }

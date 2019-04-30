@@ -20,8 +20,8 @@ module Encryption =
 
         sb.ToString()
 
-    let encrypt source =
-        match source with
+    let encrypt =
+        function
         | null
         | Empty -> invalidArg "source" "Source string can't be null or empty"
         | str -> executeAlgorythm str
