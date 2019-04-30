@@ -40,4 +40,3 @@ module Account =
         do! dbContext.SubmitUpdatesAsync()
         return Authentication.authenticate { Id = entity.Id; Login = entity.Login }
     }
-

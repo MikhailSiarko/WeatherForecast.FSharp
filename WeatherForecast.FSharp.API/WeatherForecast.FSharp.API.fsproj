@@ -10,9 +10,9 @@
 
   <ItemGroup>
     <Compile Include="Types\Application.fs" />
-    <Compile Include="Types\AuthenticationTypes.fs" />
     <Compile Include="Types\Weather.fs" />
     <Compile Include="Types\Database.fs" />
+    <Compile Include="Modules\Mapping.fs" />
     <Compile Include="Modules\Encryption.fs" />
     <Compile Include="Modules\JwtOptions.fs" />
     <Compile Include="Modules\Authentication.fs" />
