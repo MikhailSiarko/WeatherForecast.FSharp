@@ -2,7 +2,7 @@ namespace WeatherForecast.FSharp.API.Modules
 
 module Authentication =
     open Microsoft.IdentityModel.Tokens
-    open WeatherForecast.FSharp.API.Types.Application
+    open WeatherForecast.FSharp.API.Types
     open System.IdentityModel.Tokens.Jwt
     open System.Security.Claims
     open System

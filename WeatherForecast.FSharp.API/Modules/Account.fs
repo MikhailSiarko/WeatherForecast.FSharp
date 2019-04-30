@@ -1,8 +1,7 @@
 namespace WeatherForecast.FSharp.API.Modules
 
 module Account =
-    open WeatherForecast.FSharp.API.Types.Database
-    open WeatherForecast.FSharp.API.Types.Application
+    open WeatherForecast.FSharp.API.Types
     open WeatherForecast.FSharp.API.Modules
     open FSharp.Data.Sql
 

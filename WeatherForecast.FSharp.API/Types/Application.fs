@@ -1,4 +1,4 @@
-﻿namespace WeatherForecast.FSharp.API.Types.Application
+﻿namespace WeatherForecast.FSharp.API.Types
 
 open System
 

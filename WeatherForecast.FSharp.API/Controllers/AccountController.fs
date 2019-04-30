@@ -2,7 +2,7 @@ namespace WeatherForecast.FSharp.API.Controllers
 
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
-open WeatherForecast.FSharp.API.Types.Application
+open WeatherForecast.FSharp.API.Types
 open WeatherForecast.FSharp.API.Modules
 
 [<Route("api/[controller]")>]

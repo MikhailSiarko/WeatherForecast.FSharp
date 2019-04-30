@@ -1,7 +1,6 @@
 namespace WeatherForecast.FSharp.API.Modules
 
-open WeatherForecast.FSharp.API.Types.Database
-open WeatherForecast.FSharp.API.Types.Application
+open WeatherForecast.FSharp.API.Types
 open FSharp.Data.Sql
 
 module Mapping =

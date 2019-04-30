@@ -11,11 +11,12 @@
   <ItemGroup>
     <Compile Include="Types\Application.fs" />
     <Compile Include="Types\Weather.fs" />
-    <Compile Include="Types\Database.fs" />
+    <Compile Include="Types\Context.fs" />
     <Compile Include="Modules\Mapping.fs" />
     <Compile Include="Modules\Encryption.fs" />
     <Compile Include="Modules\JwtOptions.fs" />
     <Compile Include="Modules\Authentication.fs" />
+    <Compile Include="Modules\Database.fs" />
     <Compile Include="Modules\WeatherForecast.fs" />
     <Compile Include="Modules\Account.fs" />
     <Compile Include="Infrastructure\Extensions.fs" />
