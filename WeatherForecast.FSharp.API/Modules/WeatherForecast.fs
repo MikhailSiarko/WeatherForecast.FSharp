@@ -15,7 +15,7 @@ type WeatherForecast (configuration: IConfiguration, weatherService: WeatherAPIS
         | Some f -> Database.clearUpdates ()
                     do! Database.deleteItemsAsync f.Id
                     let! items = Database.createItemsAsync weatherService.Load countryCode city f.Id
-                    do! Database.update f.Id
+                    do! Database.update f
                     return Mapping.forecast f
         | None -> Database.clearUpdates ()
                   let! forecast = Database.createForecast countryCode city

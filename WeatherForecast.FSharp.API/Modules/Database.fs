@@ -12,11 +12,6 @@ module Database =
             where ((%predicate) forecast)
     }
 
-    let itemsQuery forecastId = query {
-        for i in context.Main.ForecastItems do
-            where (i.ForecastId = forecastId)
-    }
-
     let tryGetForecastFromPredicateAsync predicate = async {
         return! forecastQuery predicate
                 |> Seq.tryHeadAsync
@@ -34,12 +29,9 @@ module Database =
         return! context.SubmitUpdatesAsync()
     }
 
-    let update forecastId = async {
-        let! forecast = tryGetForecastFromPredicateAsync <@(fun i -> i.Id = forecastId)@>
-        match forecast with
-        | Some f -> f.Created <- DateTimeOffset.Now.DateTime
-                    return! context.SubmitUpdatesAsync()
-        | None -> return ()
+    let update (forecast: ForecastEntity) = async {
+        forecast.Created <- DateTimeOffset.Now.DateTime
+        return! context.SubmitUpdatesAsync()
     }
 
     let createMain (item: ForecastAPI.List) entityId =
@@ -71,8 +63,9 @@ module Database =
                      |> Array.map (fun i -> let entity = context.Main.ForecastItems.``Create(Date, ForecastId)``(i.DtTxt, forecastId)
                                             (i, entity))
         do! context.SubmitUpdatesAsync()
-        let entities = tuples
-                        |> Array.map createWeatherEntities
+        tuples
+        |> Array.map createWeatherEntities
+        |> ignore
         do! context.SubmitUpdatesAsync()
     }
 
