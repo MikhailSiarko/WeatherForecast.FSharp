@@ -6,9 +6,8 @@ open Microsoft.Extensions.DependencyInjection
 open WeatherForecast.FSharp.API.Infrastructure
 open WeatherForecast.FSharp.API.Modules
 open WeatherForecast.FSharp.API.Types
-open Microsoft.Extensions.Configuration
 
-type Startup (configuration: IConfiguration) =
+type Startup() =
     member __.ConfigureServices(services: IServiceCollection) =
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
         services.AddScoped<WeatherAPIService>() |> ignore
