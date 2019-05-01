@@ -14,7 +14,7 @@ type WeatherForecast (configuration: IConfiguration, weatherService: WeatherAPIS
         | Some f when f.Created >= lastEligibleTime -> return Mapping.toForecast f
         | Some f -> Database.clearUpdates ()
                     do! Database.deleteItemsAsync f.Id
-                    let! items = Database.createItemsAsync weatherService.Load countryCode city f.Id
+                    let! __ = Database.createItemsAsync weatherService.Load countryCode city f.Id
                     do! Database.update f
                     return Mapping.toForecast f
         | None -> Database.clearUpdates ()

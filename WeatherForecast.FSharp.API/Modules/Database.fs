@@ -22,7 +22,7 @@ module Database =
     }
 
     let deleteItemsAsync forecastId = async {
-        let! count = Seq.``delete all items from single table`` (query {
+        let! __ = Seq.``delete all items from single table`` (query {
             for i in context.Main.ForecastItems do
                 where (i.ForecastId = forecastId)
         })
