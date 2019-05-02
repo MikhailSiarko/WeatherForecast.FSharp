@@ -46,3 +46,6 @@ module Mapping =
                 Items = entity.``main.ForecastItems by Id``
                         |> multiple toForecastItem
         }
+        
+    let toUser (entity: UserEntity) =
+        { Id = entity.Id; Login = entity.Login }

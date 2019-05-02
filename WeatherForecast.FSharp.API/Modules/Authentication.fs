@@ -7,7 +7,7 @@ module Authentication =
     open System.Security.Claims
     open System
 
-    let private generateClaims user =
+    let private generateClaims (user: UserEntity) =
         [ Claim(ClaimsIdentity.DefaultNameClaimType, user.Login); Claim("Id", user.Id.ToString()) ]
 
     let private generateToken claims =
@@ -21,9 +21,9 @@ module Authentication =
                             signingCredentials = SigningCredentials(JwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256)
                         )
 
-    let private encodeSecurityToken = generateClaims >> generateToken >> JwtSecurityTokenHandler().WriteToken
+    let private encodeSecurityToken<'a when 'a :> UserEntity> = generateClaims >> generateToken >> JwtSecurityTokenHandler().WriteToken
 
     let authenticate user =
         user
         |> encodeSecurityToken
-        |> AuthenticationData.Create user
+        |> AuthenticationData.Create (Mapping.toUser user)

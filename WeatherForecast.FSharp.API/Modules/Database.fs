@@ -11,6 +11,16 @@ module Database =
         for forecast in context.Main.Forecasts do
             where ((%predicate) forecast)
     }
+    
+    let usersQuery predicate = query {
+        for user in context.Main.Users do
+            where ((%predicate) user)
+    }
+    
+    let tryGetUserAsync login = async {
+        return! usersQuery <@(fun u -> u.Login = login)@>
+                |> Seq.tryHeadAsync
+    }
 
     let tryGetForecastFromPredicateAsync predicate = async {
         return! forecastQuery predicate
@@ -20,6 +30,12 @@ module Database =
     let tryGetForecastAsync countryCode city = async {
         return! tryGetForecastFromPredicateAsync <@(fun f -> f.CountryCode = countryCode && f.Location = city)@>
     }
+    
+    let createUserAsync login password = async {
+        let user = context.Main.Users.``Create(Login, Password)``(login, password)
+        do! context.SubmitUpdatesAsync()
+        return user
+     }
 
     let deleteItemsAsync forecastId = async {
         let! __ = Seq.``delete all items from single table`` (query {
@@ -29,7 +45,7 @@ module Database =
         return! context.SubmitUpdatesAsync()
     }
 
-    let update (forecast: ForecastEntity) = async {
+    let updateAsync (forecast: ForecastEntity) = async {
         forecast.Created <- DateTimeOffset.Now.DateTime
         return! context.SubmitUpdatesAsync()
     }
@@ -69,7 +85,7 @@ module Database =
         do! context.SubmitUpdatesAsync()
     }
 
-    let createForecast countryCode city = async {
+    let createForecastAsync countryCode city = async {
         let forecast = context.Main.Forecasts.``Create(CountryCode, Created, Location)``(countryCode, DateTimeOffset.Now.DateTime, city)
         do! context.SubmitUpdatesAsync()
         return forecast
