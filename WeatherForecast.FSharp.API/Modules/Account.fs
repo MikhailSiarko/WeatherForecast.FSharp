@@ -13,7 +13,7 @@ module Account =
     let loginAsync (loginData: LoginData) = async {
         let! userOption = Database.tryGetUserAsync loginData.Login
         return match userOption with
-                | Some x when x.Password = (Encryption.encrypt loginData.Password) -> Authentication.authenticate x                                                                                        
+                | Some x when x.Password = (Encryption.encrypt loginData.Password) -> Authentication.authenticate x
                 | Some _ -> failwith "You've entered an incorrect password"
                 | None -> failwithf "User %s wasn't found" loginData.Login
     }

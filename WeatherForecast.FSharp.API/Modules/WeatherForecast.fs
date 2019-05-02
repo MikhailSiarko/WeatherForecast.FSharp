@@ -7,18 +7,22 @@ open WeatherForecast.FSharp.API.Modules
 
 type WeatherForecast (configuration: IConfiguration, weatherService: WeatherAPIService) =
     let expirationTime = float (configuration.GetSection("ExpirationTime").Value)
+    let updateForecastAsync = Database.updateAsync weatherService.Load
+    let createForecastAsync = Database.createForecastAsync weatherService.Load
+    let processRequest lastEligibleTime countryCode city (option: ForecastEntity option) = async {
+        match option with
+        | Some f when f.Created >= lastEligibleTime -> return f
+        | Some f -> do! updateForecastAsync f
+                    return f
+        | None -> let! forecast = createForecastAsync countryCode city
+                  return forecast
+    }
+
     member __.LoadAsync countryCode city = async {
         let lastEligibleTime = DateTimeOffset.Now.AddMinutes(-1.0 * expirationTime).DateTime
-        let! forecast = Database.tryGetForecastAsync countryCode city
-        match forecast with
-        | Some f when f.Created >= lastEligibleTime -> return Mapping.toForecast f
-        | Some f -> Database.clearUpdates ()
-                    do! Database.deleteItemsAsync f.Id
-                    do! Database.createItemsAsync weatherService.Load countryCode city f.Id
-                    do! Database.updateAsync f
-                    return Mapping.toForecast f
-        | None -> Database.clearUpdates ()
-                  let! forecast = Database.createForecastAsync countryCode city
-                  do! Database.createItemsAsync weatherService.Load countryCode city forecast.Id
-                  return Mapping.toForecast forecast
+        let! forecastOption = Database.tryGetForecastAsync countryCode city
+        return forecastOption
+                |> processRequest lastEligibleTime countryCode city
+                |> Async.RunSynchronously
+                |> Mapping.toForecast
     }

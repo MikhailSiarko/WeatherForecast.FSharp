@@ -9,4 +9,3 @@ module JwtOptions =
     let Audience = "ParcelTracker_Client"
     let Lifetime = 20
     let SymmetricSecurityKey = SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
-

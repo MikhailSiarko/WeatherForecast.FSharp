@@ -37,7 +37,7 @@ module Database =
         return user
      }
 
-    let deleteItemsAsync forecastId = async {
+    let private deleteItemsAsync forecastId = async {
         let! __ = Seq.``delete all items from single table`` (query {
             for i in context.Main.ForecastItems do
                 where (i.ForecastId = forecastId)
@@ -45,12 +45,7 @@ module Database =
         return! context.SubmitUpdatesAsync()
     }
 
-    let updateAsync (forecast: ForecastEntity) = async {
-        forecast.Created <- DateTimeOffset.Now.DateTime
-        return! context.SubmitUpdatesAsync()
-    }
-
-    let createMain (item: ForecastAPI.List) entityId =
+    let private createMain (item: ForecastAPI.List) entityId =
         context.Main.Mains.``Create(ForecastItemId, Humidity, MaxTemp, MinTemp, Pressure, Temp)``
             (
                 entityId,
@@ -61,20 +56,20 @@ module Database =
                 item.Main.Temp
             )
 
-    let createWeatherItems (weathers: ForecastAPI.Weather[]) entityId =
+    let private createWeatherItems (weathers: ForecastAPI.Weather[]) entityId =
         weathers
         |> Array.map (fun w -> context.Main.Weathers.``Create(Description, ForecastItemId, Main)``(w.Description, entityId, w.Main))
 
-    let createWind (wind: ForecastAPI.Wind) entityId =
+    let private createWind (wind: ForecastAPI.Wind) entityId =
         context.Main.Winds.``Create(Degree, ForecastItemId, Speed)``(wind.Deg, entityId, wind.Speed)
 
-    let createWeatherEntities (item: ForecastAPI.List, entity: AppDbContext.dataContext.``main.ForecastItemsEntity``) =
+    let private createWeatherEntities (item: ForecastAPI.List, entity: AppDbContext.dataContext.``main.ForecastItemsEntity``) =
         let main = createMain item entity.Id
         let weathers = createWeatherItems item.Weather entity.Id
         let wind = createWind item.Wind entity.Id
         (entity, main, weathers, wind)
 
-    let saveItemsAsync forecastId (items: ForecastAPI.List[]) = async {
+    let private saveItemsAsync forecastId (items: ForecastAPI.List[]) = async {
         let tuples = items
                      |> Array.map (fun i -> let entity = context.Main.ForecastItems.``Create(Date, ForecastId)``(i.DtTxt, forecastId)
                                             (i, entity))
@@ -85,15 +80,25 @@ module Database =
         do! context.SubmitUpdatesAsync()
     }
 
-    let createForecastAsync countryCode city = async {
-        let forecast = context.Main.Forecasts.``Create(CountryCode, Created, Location)``(countryCode, DateTimeOffset.Now.DateTime, city)
-        do! context.SubmitUpdatesAsync()
-        return forecast
+    let private createItemsAsync collect (forecast: ForecastEntity) = async {
+        let! items = collect forecast.CountryCode forecast.Location
+        return! saveItemsAsync forecast.Id items
     }
 
-    let createItemsAsync collect countryCode city forecastId = async {
-        let! items = collect countryCode city
-        return! saveItemsAsync forecastId items
+    let updateAsync collect (forecast: ForecastEntity) = async {
+        context.ClearUpdates() |> ignore
+        do! deleteItemsAsync forecast.Id
+        do! createItemsAsync collect forecast
+        forecast.Created <- DateTimeOffset.Now.DateTime
+        return! context.SubmitUpdatesAsync()
+    }
+
+    let createForecastAsync collect countryCode city = async {
+        context.ClearUpdates() |> ignore
+        let forecast = context.Main.Forecasts.``Create(CountryCode, Created, Location)``(countryCode, DateTimeOffset.Now.DateTime, city)
+        do! context.SubmitUpdatesAsync()
+        do! createItemsAsync collect forecast
+        return forecast
     }
 
     let clearUpdates () = context.ClearUpdates() |> ignore
