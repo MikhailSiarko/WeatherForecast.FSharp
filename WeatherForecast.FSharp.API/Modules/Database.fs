@@ -27,8 +27,8 @@ module Database =
                 |> Seq.tryHeadAsync
     }
 
-    let tryGetForecastAsync countryCode city = async {
-        return! tryGetForecastFromPredicateAsync <@(fun f -> f.CountryCode = countryCode && f.Location = city)@>
+    let tryGetForecastAsync city = async {
+        return! tryGetForecastFromPredicateAsync <@(fun f -> f.Location = city)@>
     }
     
     let createUserAsync login password = async {
@@ -80,24 +80,21 @@ module Database =
         do! context.SubmitUpdatesAsync()
     }
 
-    let private createItemsAsync collect (forecast: ForecastEntity) = async {
-        let! items = collect forecast.CountryCode forecast.Location
-        return! saveItemsAsync forecast.Id items
-    }
-
-    let updateAsync collect (forecast: ForecastEntity) = async {
+    let updateAsync (collect: string -> Async<ForecastAPI.Root>) (forecast: ForecastEntity) = async {
         context.ClearUpdates() |> ignore
         do! deleteItemsAsync forecast.Id
-        do! createItemsAsync collect forecast
+        let! root = collect forecast.Location
+        do! saveItemsAsync forecast.Id root.List
         forecast.Created <- DateTimeOffset.Now.DateTime
         return! context.SubmitUpdatesAsync()
     }
 
-    let createForecastAsync collect countryCode city = async {
+    let createForecastAsync (collect: string -> Async<ForecastAPI.Root>) city = async {
         context.ClearUpdates() |> ignore
-        let forecast = context.Main.Forecasts.``Create(CountryCode, Created, Location)``(countryCode, DateTimeOffset.Now.DateTime, city)
+        let! root = collect city
+        let forecast = context.Main.Forecasts.``Create(CountryCode, Created, Location)``(root.City.Country, DateTimeOffset.Now.DateTime, root.City.Name)
         do! context.SubmitUpdatesAsync()
-        do! createItemsAsync collect forecast
+        do! saveItemsAsync forecast.Id root.List
         return forecast
     }
 
