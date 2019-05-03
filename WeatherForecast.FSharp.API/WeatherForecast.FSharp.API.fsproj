@@ -20,6 +20,7 @@
     <Compile Include="Infrastructure\Extensions.fs" />
     <Compile Include="Infrastructure\ExceptionHandlingMiddleware.fs" />
     <Compile Include="Controllers\AccountController.fs" />
+    <Compile Include="Controllers\ForecastController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
