@@ -2,10 +2,11 @@ namespace WeatherForecast.FSharp.API.Modules
 
 open System.Text
 open Microsoft.IdentityModel.Tokens
+open WeatherForecast.FSharp.API.Types
 
 module JwtOptions =
-    let private key = "AuthenticationKey"
-    let Issuer = "ParcelTracker_API"
-    let Audience = "ParcelTracker_Client"
-    let Lifetime = 20
-    let SymmetricSecurityKey = SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+    let private options = (Async.RunSynchronously (Settings.AsyncGetSample()))
+    let Issuer = options.JwtOptions.Issuer
+    let Audience = options.JwtOptions.Audience
+    let Lifetime = options.JwtOptions.Lifetime
+    let SymmetricSecurityKey = SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.JwtOptions.Key))

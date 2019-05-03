@@ -1,6 +1,7 @@
 ﻿namespace WeatherForecast.FSharp.API.Types
 
 open System
+open FSharp.Data
 
 type Main = { Id: int64; Temp: decimal; MinTemp: decimal; MaxTemp: decimal; Pressure: decimal; Humidity: int64 }
 
@@ -21,3 +22,5 @@ type Forecast = { Id: int64; CountryCode: string; City: string; Updated: DateTim
 type AuthenticationData =
     { Token: string; User: User }
     static member Create user token = { User = user; Token = token }
+
+type Settings = JsonProvider<"appsettings.json">
