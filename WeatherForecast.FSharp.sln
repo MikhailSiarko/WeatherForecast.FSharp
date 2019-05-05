@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.438
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.API", "WeatherForecast.FSharp.API\WeatherForecast.FSharp.API.fsproj", "{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.API", "WeatherForecast.FSharp.API\WeatherForecast.FSharp.API.fsproj", "{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Migrate", "WeatherForecast.FSharp.Migrate\WeatherForecast.FSharp.Migrate.fsproj", "{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.Migrate", "WeatherForecast.FSharp.Migrate\WeatherForecast.FSharp.Migrate.fsproj", "{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A8361BD-BB9F-4B64-9A82-C0DAD99CCE12}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.Config = NuGet.Config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

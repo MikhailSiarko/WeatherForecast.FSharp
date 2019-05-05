@@ -8,7 +8,7 @@ module Literals =
     let ConnectionString = "Data Source=" + __SOURCE_DIRECTORY__ + "\\..\\..\\Database.db"
 
     [<Literal>]
-    let ResPath = "%USERPROFILE%\\.nuget\\packages\\system.data.sqlite.core\\1.0.110\\lib\\netstandard2.0"
+    let ResPath = __SOURCE_DIRECTORY__ + "..\\..\\packages\\system.data.sqlite.core\\1.0.110\\lib\\netstandard2.0"
 
 type AppDbContext = SqlDataProvider<
                         Common.DatabaseProviderTypes.SQLITE,
