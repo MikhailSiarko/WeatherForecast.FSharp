@@ -19,7 +19,7 @@ type Startup (configuration: IConfiguration) =
 
     member __.ConfigureServices(services: IServiceCollection) =
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
-        services.AddScoped<LoadForecast>(Func<IServiceProvider, LoadForecast>(configureLoadForecast)) |> ignore
+        services.AddScoped<FetchForecast>(Func<IServiceProvider, FetchForecast>(configureLoadForecast)) |> ignore
         services.AddApplicationAuthentication() |> ignore
 
     member __.Configure(app: IApplicationBuilder) =

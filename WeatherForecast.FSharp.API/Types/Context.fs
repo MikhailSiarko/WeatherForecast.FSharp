@@ -22,3 +22,4 @@ type MainEntity = AppDbContext.dataContext.``main.MainsEntity``
 type WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
 type WindEntity = AppDbContext.dataContext.``main.WindsEntity``
 type UserEntity = AppDbContext.dataContext.``main.UsersEntity``
+type MainSchema = AppDbContext.dataContext.mainSchema

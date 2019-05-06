@@ -7,11 +7,11 @@ open WeatherForecast.FSharp.API.Types
 [<Route("api/[controller]")>]
 [<ApiController>]
 [<Authorize>]
-type ForecastController (loadAsync: LoadForecast) =
+type ForecastController (fetchAsync: FetchForecast) =
     inherit ControllerBase()
     
     [<HttpGet("{city}")>]
     member __.Get([<FromRoute>] city: string) = async {
-        let! forecast = loadAsync city
+        let! forecast = fetchAsync city
         return JsonResult(forecast)
     }

@@ -12,14 +12,12 @@ module Authentication =
 
     let private generateToken claims =
         let now = DateTime.Now
-        JwtSecurityToken(
-                            JwtOptions.Issuer,
-                            JwtOptions.Audience,
-                            notBefore = Nullable now,
-                            claims = claims,
-                            expires = Nullable (now.Add(TimeSpan.FromMinutes(float JwtOptions.Lifetime))),
-                            signingCredentials = SigningCredentials(JwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256)
-                        )
+        JwtSecurityToken(JwtOptions.Issuer,
+                         JwtOptions.Audience,
+                         notBefore = Nullable now,
+                         claims = claims,
+                         expires = Nullable (now.Add(TimeSpan.FromMinutes(float JwtOptions.Lifetime))),
+                         signingCredentials = SigningCredentials(JwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256))
 
     let private encodeSecurityToken<'a when 'a :> UserEntity> = generateClaims >> generateToken >> JwtSecurityTokenHandler().WriteToken
 

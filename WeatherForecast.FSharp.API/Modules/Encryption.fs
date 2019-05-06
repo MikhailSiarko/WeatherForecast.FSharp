@@ -14,7 +14,7 @@ module Encryption =
         let bytes = Encoding.UTF8.GetBytes(source.Insert(source.Length - 3, localeParameter))
         let hash = sh1.ComputeHash(bytes)
         let sb = StringBuilder()
-        Array.iter (fun (t: byte) -> sb.Append(t.ToString("x8")) |> ignore) hash
+        Array.iter (fun (t: byte) -> sb.Append(t.ToString("X4")) |> ignore) hash
         sb.ToString()
 
     let encrypt =
