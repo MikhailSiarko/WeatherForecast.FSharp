@@ -32,7 +32,7 @@ type IApplicationBuilderExtensions () =
     [<Extension>]
     static member inline ConfigureApplicationCors(builder: IApplicationBuilder) =
         builder.UseCors(
-                           fun builder -> builder.AllowAnyOrigin() |> ignore
-                                          builder.AllowAnyMethod() |> ignore
-                                          builder.AllowAnyHeader() |> ignore
+                           fun builder -> builder.AllowAnyOrigin()
+                                                 .AllowAnyMethod()
+                                                 .AllowAnyHeader() |> ignore
                        )

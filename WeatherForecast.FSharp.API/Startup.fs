@@ -23,8 +23,8 @@ type Startup (configuration: IConfiguration) =
         services.AddApplicationAuthentication() |> ignore
 
     member __.Configure(app: IApplicationBuilder) =
-        app.UseMiddleware<ExeptionHandlingMiddleware>() |> ignore
-        app.ConfigureApplicationCors() |> ignore
-        app.UseHttpsRedirection() |> ignore
-        app.UseAuthentication() |> ignore
-        app.UseMvc() |> ignore
+        app.UseMiddleware<ExeptionHandlingMiddleware>()
+            .ConfigureApplicationCors()
+            .UseHttpsRedirection()
+            .UseAuthentication()
+            .UseMvc() |> ignore
