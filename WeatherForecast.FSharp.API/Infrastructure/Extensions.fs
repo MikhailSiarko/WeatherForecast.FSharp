@@ -1,38 +1,38 @@
 ﻿namespace WeatherForecast.FSharp.API.Infrastructure
 
-open System.Runtime.CompilerServices
-open Microsoft.Extensions.DependencyInjection
-open Microsoft.AspNetCore.Authentication.JwtBearer
-open Microsoft.IdentityModel.Tokens
-open WeatherForecast.FSharp.API.Modules
-open Microsoft.AspNetCore.Builder
+[<AutoOpen>]
+module ServiceCollectionExtensions =
+    open Microsoft.AspNetCore.Authentication.JwtBearer
+    open WeatherForecast.FSharp.API.Modules
+    open Microsoft.IdentityModel.Tokens
+    open Microsoft.Extensions.DependencyInjection
 
-[<Extension>]
-type IServiceCollectionExtensions () =
-    [<Extension>]
-    static member inline AddApplicationAuthentication(services: IServiceCollection) =
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(
-                fun options -> options.RequireHttpsMetadata <- false
-                               options.TokenValidationParameters <-
-                                    TokenValidationParameters
-                                        (
-                                            ValidateIssuer = true,
-                                            ValidIssuer = JwtOptions.Issuer,
-                                            ValidateAudience = true,
-                                            ValidAudience = JwtOptions.Audience,
-                                            ValidateLifetime = true,
-                                            IssuerSigningKey = JwtOptions.SymmetricSecurityKey,
-                                            ValidateIssuerSigningKey = true
-                                        )
-                         )
+    type IServiceCollection with
+        member this.AddApplicationAuthentication () =
+            if this = null then nullArg "this"
+            this.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(
+                    fun options -> options.RequireHttpsMetadata <- false
+                                   options.TokenValidationParameters <-
+                                        TokenValidationParameters
+                                            (
+                                                ValidateIssuer = true,
+                                                ValidIssuer = JwtOptions.Issuer,
+                                                ValidateAudience = true,
+                                                ValidAudience = JwtOptions.Audience,
+                                                ValidateLifetime = true,
+                                                IssuerSigningKey = JwtOptions.SymmetricSecurityKey,
+                                                ValidateIssuerSigningKey = true
+                                            )
+                             )
 
-[<Extension>]
-type IApplicationBuilderExtensions () =
-    [<Extension>]
-    static member inline ConfigureApplicationCors(builder: IApplicationBuilder) =
-        builder.UseCors(
-                           fun builder -> builder.AllowAnyOrigin()
-                                                 .AllowAnyMethod()
-                                                 .AllowAnyHeader() |> ignore
-                       )
+[<AutoOpen>]
+module ApplicationBuilderExtensions =
+    open Microsoft.AspNetCore.Builder
+    
+    type IApplicationBuilder with
+        member this.ConfigureApplicationCors () =
+            if this = null then nullArg "this"
+            this.UseCors(fun builder -> builder.AllowAnyOrigin()
+                                               .AllowAnyMethod()
+                                               .AllowAnyHeader() |> ignore)

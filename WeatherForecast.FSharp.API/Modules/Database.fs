@@ -9,7 +9,7 @@ module Database =
 
     let table selector = selector context.Main
     
-    let tableQuery (tableSelectorExpr: Quotations.Expr<MainSchema -> IQueryable<_>>) predicateExpr =
+    let queryTo (tableSelectorExpr: Quotations.Expr<MainSchema -> IQueryable<_>>) predicateExpr =
         query {
             for entity in ((%tableSelectorExpr) context.Main) do
                 where ((%predicateExpr) entity)

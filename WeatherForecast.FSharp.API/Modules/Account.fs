@@ -12,7 +12,7 @@ module Account =
             failwith "Passwords do not match"
     
     let private getUserAsync login = async {
-        return! Database.tableQuery <@ fun m -> m.Users :> IQueryable<_> @>
+        return! Database.queryTo <@ fun m -> m.Users :> IQueryable<_> @>
                 |> Database.where <@ fun u -> u.Login = login @>
                 |> Database.singleOrDefaultAsync
     }

@@ -6,6 +6,7 @@ module Authentication =
     open System.IdentityModel.Tokens.Jwt
     open System.Security.Claims
     open System
+    open AutoMapper
 
     let private generateClaims (user: UserEntity) =
         [ Claim(ClaimsIdentity.DefaultNameClaimType, user.Login); Claim("Id", user.Id.ToString()) ]
@@ -24,4 +25,4 @@ module Authentication =
     let authenticate user =
         user
         |> encodeSecurityToken
-        |> AuthenticationData.Create (Mapping.toUser user)
+        |> AuthenticationData.Create (map<User> user)

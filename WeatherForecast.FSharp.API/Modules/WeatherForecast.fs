@@ -1,5 +1,6 @@
 namespace WeatherForecast.FSharp.API.Modules
 
+open AutoMapper
 open System
 open System.Linq
 open WeatherForecast.FSharp.API.Types
@@ -70,11 +71,11 @@ module WeatherForecast =
 
     let loadAsync expirationTime fetch city = async {
         let lastEligibleTime = DateTimeOffset.Now.AddMinutes(-1.0 * expirationTime).DateTime
-        let! forecastOption = Database.tableQuery <@ fun m -> m.Forecasts :> IQueryable<_> @>
+        let! forecastOption = Database.queryTo <@ fun m -> m.Forecasts :> IQueryable<_> @>
                               |> Database.where <@ fun f -> f.Location = city @>
                               |> Database.singleOrDefaultAsync
         return forecastOption
                 |> processRequestAsync fetch lastEligibleTime city
                 |> Async.RunSynchronously
-                |> Mapping.toForecast
+                |> AutoMap.map<Forecast>
     }

@@ -1,5 +1,6 @@
 namespace WeatherForecast.FSharp.API
 
+open AutoMapper
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
@@ -8,6 +9,7 @@ open WeatherForecast.FSharp.API.Infrastructure
 open WeatherForecast.FSharp.API.Modules
 open WeatherForecast.FSharp.API.Types
 open System
+open System.Reflection
 
 type Startup (configuration: IConfiguration) =
     let apiKey = configuration.GetSection("WeatherForecastServiceApiKey").Value
@@ -21,6 +23,7 @@ type Startup (configuration: IConfiguration) =
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
         services.AddScoped<FetchForecast>(Func<IServiceProvider, FetchForecast>(configureLoadForecast)) |> ignore
         services.AddApplicationAuthentication() |> ignore
+        Mapper.Initialize (fun b -> b.AddMaps(Assembly.GetExecutingAssembly()))
 
     member __.Configure(app: IApplicationBuilder) =
         app.UseMiddleware<ExeptionHandlingMiddleware>()
