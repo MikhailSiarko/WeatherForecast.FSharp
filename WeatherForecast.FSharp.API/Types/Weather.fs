@@ -4,7 +4,7 @@ open FSharp.Data
 
 type ForecastAPI = JsonProvider<"./Samples/data.json">
 
-type FetchForecast = string -> Async<Forecast>
+type GetForecast = string -> Async<Forecast>
 
 module WeatherAPI =
     let configureLoad apiUrl apiKey city = async {
