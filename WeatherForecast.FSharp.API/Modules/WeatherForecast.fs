@@ -77,5 +77,5 @@ module WeatherForecast =
         return forecastOption
                 |> processRequestAsync fetch lastEligibleTime city
                 |> Async.RunSynchronously
-                |> AutoMap.map<Forecast>
+                |> AutoMap.mapTo<Forecast>
     }

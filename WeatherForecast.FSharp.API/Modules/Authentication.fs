@@ -25,4 +25,4 @@ module Authentication =
     let authenticate user =
         user
         |> encodeSecurityToken
-        |> AuthenticationData.Create (map<User> user)
+        |> AuthenticationData.Create (mapTo<User> user)

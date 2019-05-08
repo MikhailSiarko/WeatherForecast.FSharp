@@ -4,7 +4,7 @@ open AutoMapper
 open FSharp.Data.Sql
 open WeatherForecast.FSharp.API.Types
 
-type ForecastProgile () as self =
+type ForecastProfile () as self =
     inherit Profile()
     
     do self.CreateMap<ForecastEntity, Forecast>(MemberList.None)
@@ -15,6 +15,6 @@ type ForecastProgile () as self =
         |> mapMember <@ fun f -> f.Items @> <@ fun e -> e.``main.ForecastItems by Id``
                                                                 |> Seq.executeQueryAsync
                                                                 |> Async.RunSynchronously
-                                                                |> Seq.map map<ForecastItem>
+                                                                |> Seq.map mapTo<ForecastItem>
                                                                 |> Seq.toArray @>
         |> ignore

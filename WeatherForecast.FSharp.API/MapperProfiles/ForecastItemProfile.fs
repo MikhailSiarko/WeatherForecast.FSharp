@@ -14,14 +14,14 @@ type ForecastItemProfile () as this =
         |> mapMember <@ fun i -> i.Main @> <@ fun e -> e.``main.Mains by Id``
                                                                         |> Seq.headAsync
                                                                         |> Async.RunSynchronously
-                                                                        |> map<Main> @>
+                                                                        |> mapTo<Main> @>
         |> mapMember <@ fun i -> i.Weather @> <@ fun e -> e.``main.Weathers by Id``
                                                                     |> Seq.executeQueryAsync
                                                                     |> Async.RunSynchronously
-                                                                    |> Seq.map map<Weather>
+                                                                    |> Seq.map mapTo<Weather>
                                                                     |> Seq.toArray @>
         |> mapMember <@ fun i -> i.Wind @> <@ fun e -> e.``main.Winds by Id``
                                                                 |> Seq.headAsync
                                                                 |> Async.RunSynchronously
-                                                                |> map<Wind> @>
+                                                                |> mapTo<Wind> @>
         |> ignore

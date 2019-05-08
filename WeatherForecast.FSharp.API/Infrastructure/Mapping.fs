@@ -39,4 +39,4 @@ module AutoMap =
     let ignoreMemberName destMember =
         forMemberName destMember (fun o -> o.Ignore())
         
-    let map<'dest> source = Mapper.Map<_, 'dest>(source)
+    let mapTo<'dest> source = Mapper.Map<_, 'dest>(source)
