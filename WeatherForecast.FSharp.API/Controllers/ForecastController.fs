@@ -11,7 +11,7 @@ type ForecastController (getForecastAsync: GetForecast) =
     inherit ControllerBase()
     
     [<HttpGet("{city}")>]
-    member __.Get([<FromRoute>] city: string) = async {
+    member this.Get([<FromRoute>] city: string) = async {
         let! forecast = getForecastAsync city
-        return JsonResult(forecast)
+        return this.Ok(forecast)
     }

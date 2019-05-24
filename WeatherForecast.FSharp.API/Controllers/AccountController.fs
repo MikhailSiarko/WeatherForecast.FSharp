@@ -12,13 +12,13 @@ type AccountController () =
     inherit ControllerBase()
 
     [<HttpPost("login")>]
-    member __.Login([<FromBody>] loginData: LoginData) = async {
+    member this.Login([<FromBody>] loginData: LoginData) = async {
         let! user = Account.loginAsync loginData
-        return JsonResult(user)
+        return this.Ok(user)
     }
 
     [<HttpPost("register")>]
-    member __.Register([<FromBody>] registerData: RegisterData) = async {
+    member this.Register([<FromBody>] registerData: RegisterData) = async {
         let! user = Account.registerAsync registerData
-        return JsonResult(user)
+        return this.Ok(user)
     }
