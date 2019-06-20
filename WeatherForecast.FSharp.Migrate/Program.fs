@@ -2,6 +2,7 @@
 open Microsoft.Extensions.DependencyInjection
 open FluentMigrator.Runner
 open System
+open System.IO
 open System.Reflection
 open System.Text
 
@@ -24,7 +25,7 @@ let configureServices () =
             fun builder ->
                 builder
                     .AddSQLite()
-                    .WithGlobalConnectionString("Data Source=..\\Database.db")
+                    .WithGlobalConnectionString(Path.Combine("Data Source=", "..", Path.PathSeparator.ToString(), "Database.db"))
                     .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations
                 |> ignore
         )
