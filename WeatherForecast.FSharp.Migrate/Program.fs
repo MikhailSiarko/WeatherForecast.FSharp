@@ -25,7 +25,7 @@ let configureServices () =
             fun builder ->
                 builder
                     .AddSQLite()
-                    .WithGlobalConnectionString(Path.Combine("Data Source=", "..", Path.PathSeparator.ToString(), "Database.db"))
+                    .WithGlobalConnectionString("Data Source=" + Path.Combine("..", "Database.db"))
                     .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations
                 |> ignore
         )

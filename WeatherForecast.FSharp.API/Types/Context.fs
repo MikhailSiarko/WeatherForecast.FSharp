@@ -1,4 +1,4 @@
-namespace WeatherForecast.FSharp.API.Types
+﻿namespace WeatherForecast.FSharp.API.Types
 
 open FSharp.Data.Sql
 open FSharp.Data.Sql.Common
