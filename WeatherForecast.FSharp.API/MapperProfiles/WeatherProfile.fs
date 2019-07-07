@@ -10,4 +10,5 @@ type WeatherProfile () as this =
         |> mapMember <@ fun w -> w.Id @> <@ fun i -> i.Id @>
         |> mapMember <@ fun w -> w.Main @> <@ fun i -> i.Main @>
         |> mapMember <@ fun w -> w.Description @> <@ fun i -> i.Description @>
+        |> mapMember <@ fun w -> w.Icon @> <@ fun i -> i.Icon @>
         |> ignore

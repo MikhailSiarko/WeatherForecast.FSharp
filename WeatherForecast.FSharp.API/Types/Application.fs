@@ -15,6 +15,7 @@ type Weather () =
     member val Id = Unchecked.defaultof<int64> with get, set
     member val Main = Unchecked.defaultof<string> with get, set
     member val Description = Unchecked.defaultof<string> with get, set
+    member val Icon = Unchecked.defaultof<string> with get, set
 
 type Wind () =
     member val Id = Unchecked.defaultof<int64> with get, set
