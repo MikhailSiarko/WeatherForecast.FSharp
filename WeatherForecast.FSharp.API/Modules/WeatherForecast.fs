@@ -21,7 +21,8 @@ module WeatherForecast =
         |> Array.map (fun w -> Database.table (fun i -> i.Weathers)
                                 |> Database.add (fun i -> i.ForecastItemId <- entityId
                                                           i.Main <- w.Main
-                                                          i.Description <- w.Description))
+                                                          i.Description <- w.Description
+                                                          i.Icon <- w.Icon))
 
     let private createWind (wind: ForecastAPI.Wind) entityId =
         Database.table (fun m -> m.Winds)
