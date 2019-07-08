@@ -11,17 +11,9 @@ type ForecastItemProfile () as this =
         |> mapMember <@ fun i -> i.Id @> <@ fun e -> e.Id @>
         |> mapMember <@ fun i -> i.Date @> <@ fun e -> e.Date @>
         |> mapMember <@ fun i -> i.ForecastId @> <@ fun e -> e.ForecastId @>
-        |> mapMember <@ fun i -> i.Main @> <@ fun e -> e.``main.Mains by Id``
-                                                                        |> Seq.headAsync
-                                                                        |> Async.RunSynchronously
-                                                                        |> mapTo<Main> @>
-        |> mapMember <@ fun i -> i.Weather @> <@ fun e -> e.``main.Weathers by Id``
+        |> mapMember <@ fun i -> i.TimeItems @> <@ fun e -> e.``main.ForecastTimeItems by Id``
                                                                     |> Seq.executeQueryAsync
                                                                     |> Async.RunSynchronously
-                                                                    |> Seq.map mapTo<Weather>
+                                                                    |> Seq.map mapTo<ForecastTimeItem>
                                                                     |> Seq.toArray @>
-        |> mapMember <@ fun i -> i.Wind @> <@ fun e -> e.``main.Winds by Id``
-                                                                |> Seq.headAsync
-                                                                |> Async.RunSynchronously
-                                                                |> mapTo<Wind> @>
         |> ignore

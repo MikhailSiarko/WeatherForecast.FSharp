@@ -7,7 +7,6 @@
 
     <ItemGroup>
         <Compile Include="Migrations\20190408_Initial.fs" />
-        <Compile Include="Migrations\20190707_AddIcon.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

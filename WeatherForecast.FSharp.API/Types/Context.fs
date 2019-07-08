@@ -18,6 +18,7 @@ type AppDbContext = SqlDataProvider<
 
 type ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
 type ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
+type ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
 type MainEntity = AppDbContext.dataContext.``main.MainsEntity``
 type WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
 type WindEntity = AppDbContext.dataContext.``main.WindsEntity``

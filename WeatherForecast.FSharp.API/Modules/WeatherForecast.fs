@@ -7,57 +7,61 @@ open WeatherForecast.FSharp.API.Types
 open WeatherForecast.FSharp.API.Modules
 
 module WeatherForecast =
-    let private createMain (item: ForecastAPI.List) entityId =
+    let private createMain (item: ForecastAPI.List) timeItemId =
         Database.table (fun i -> i.Mains)
-        |> Database.add (fun m -> m.ForecastItemId <- entityId
+        |> Database.add (fun m -> m.ForecastTimeItemId <- timeItemId
                                   m.Temp <- item.Main.Temp
                                   m.MinTemp <- item.Main.TempMin
                                   m.MaxTemp <- item.Main.TempMax
                                   m.Humidity <- int64 item.Main.Humidity
                                   m.Pressure <- item.Main.Pressure)
 
-    let private createWeatherItems (weathers: ForecastAPI.Weather[]) entityId =
+    let private createWeatherItems (weathers: ForecastAPI.Weather[]) timeItemId =
         weathers
         |> Array.map (fun w -> Database.table (fun i -> i.Weathers)
-                                |> Database.add (fun i -> i.ForecastItemId <- entityId
+                                |> Database.add (fun i -> i.ForecastTimeItemId <- timeItemId
                                                           i.Main <- w.Main
                                                           i.Description <- w.Description
                                                           i.Icon <- w.Icon))
 
-    let private createWind (wind: ForecastAPI.Wind) entityId =
+    let private createWind (wind: ForecastAPI.Wind) timeItemId =
         Database.table (fun m -> m.Winds)
-        |> Database.add (fun w -> w.ForecastItemId <- entityId
+        |> Database.add (fun w -> w.ForecastTimeItemId <- timeItemId
                                   w.Speed <- wind.Speed
                                   w.Degree <- wind.Deg)
+        
 
-    let private createWeatherEntities (item: ForecastAPI.List, entity: ForecastItemEntity) =
-        let main = createMain item entity.Id
-        let weathers = createWeatherItems item.Weather entity.Id
-        let wind = createWind item.Wind entity.Id
-        (entity, main, weathers, wind)
+    let private createWeatherEntities timeItemId item: ForecastAPI.List =
+        let _ = createMain item timeItemId
+        let _ = createWeatherItems item.Weather timeItemId
+        let _ = createWind item.Wind timeItemId
+        item
     
     let fetchItemsAsync (root: ForecastAPI.Root) (forecast: ForecastEntity) = async {
-        root.List
-        |> Array.map (fun i -> let entity = Database.table (fun d -> d.ForecastItems)
-                                            |> Database.add (fun m -> m.ForecastId <- forecast.Id
-                                                                      m.Date <- i.DtTxt)
-                               (i, entity))
+        let groupedItems = root.List
+                            |> Array.groupBy (fun i -> i.DtTxt.Date)
+                            |> Array.map (fun (key, items) -> let itemEntity = Database.table (fun d -> d.ForecastItems)
+                                                                                  |> Database.add (fun m -> m.ForecastId <- forecast.Id
+                                                                                                            m.Date <- key)
+                                                              (itemEntity, items))
+                            |> Database.saveUpdatesAsync
+                            |> Async.RunSynchronously
+
+        groupedItems
+        |> Array.map (fun (itemEntity, items) -> items
+                                                 |> Array.map (fun i -> let timeItem = Database.table (fun f -> f.ForecastTimeItems)
+                                                                                        |> Database.add (fun t -> t.ForecastItemId <- itemEntity.Id
+                                                                                                                  t.Time <- i.DtTxt)
+                                                                        (timeItem, i)))
+        |> Array.collect (fun i -> i)
         |> Database.saveUpdatesAsync
         |> Async.RunSynchronously
-        |> Array.map createWeatherEntities
+        |> Array.map (fun (timeItem, item) -> createWeatherEntities timeItem.Id item)
         |> Database.saveUpdatesAsync
         |> Async.RunSynchronously
         |> ignore
         return forecast
     }
-    
-    let private removeItems (query: IQueryable<ForecastItemEntity>) =
-        query
-        |> Database.executeAsync
-        |> Async.RunSynchronously
-        |> Seq.iter (fun i -> Async.RunSynchronously (Database.deleteAsync i.``main.Mains by Id``) |> ignore
-                              Async.RunSynchronously (Database.deleteAsync i.``main.Weathers by Id``) |> ignore
-                              Async.RunSynchronously (Database.deleteAsync i.``main.Winds by Id``) |> ignore)
         
     
     let private processRequestAsync (fetch: string -> Async<ForecastAPI.Root>) lastEligibleTime city (option: ForecastEntity option) = async {
@@ -66,8 +70,7 @@ module WeatherForecast =
         | Some f -> let! root = fetch city
                     return! f
                             |> Database.update (fun i -> i.Created <- DateTimeOffset.Now.DateTime)
-                            |> Database.update (fun i -> removeItems i.``main.ForecastItems by Id``
-                                                         Async.RunSynchronously (Database.deleteAsync i.``main.ForecastItems by Id``) |> ignore)
+                            |> Database.update (fun i -> Async.RunSynchronously (Database.deleteAsync i.``main.ForecastItems by Id``) |> ignore)
                             |> Database.saveUpdatesAsync
                             |> Async.RunSynchronously
                             |> fetchItemsAsync root
