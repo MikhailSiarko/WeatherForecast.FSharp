@@ -49,7 +49,16 @@ module WeatherForecast =
         |> Async.RunSynchronously
         |> ignore
         return forecast
-    } 
+    }
+    
+    let private removeItems (query: IQueryable<ForecastItemEntity>) =
+        query
+        |> Database.executeAsync
+        |> Async.RunSynchronously
+        |> Seq.iter (fun i -> Async.RunSynchronously (Database.deleteAsync i.``main.Mains by Id``) |> ignore
+                              Async.RunSynchronously (Database.deleteAsync i.``main.Weathers by Id``) |> ignore
+                              Async.RunSynchronously (Database.deleteAsync i.``main.Winds by Id``) |> ignore)
+        
     
     let private processRequestAsync (fetch: string -> Async<ForecastAPI.Root>) lastEligibleTime city (option: ForecastEntity option) = async {
         match option with
@@ -57,6 +66,8 @@ module WeatherForecast =
         | Some f -> let! root = fetch city
                     return! f
                             |> Database.update (fun i -> i.Created <- DateTimeOffset.Now.DateTime)
+                            |> Database.update (fun i -> removeItems i.``main.ForecastItems by Id``
+                                                         Async.RunSynchronously (Database.deleteAsync i.``main.ForecastItems by Id``) |> ignore)
                             |> Database.saveUpdatesAsync
                             |> Async.RunSynchronously
                             |> fetchItemsAsync root
@@ -70,10 +81,10 @@ module WeatherForecast =
                           |> fetchItemsAsync root
     }
 
-    let loadAsync expirationTime fetch city = async {
+    let loadAsync expirationTime fetch (city: string) = async {
         let lastEligibleTime = DateTimeOffset.Now.AddMinutes(-1.0 * expirationTime).DateTime
         let! forecastOption = Database.queryTo <@ fun m -> m.Forecasts :> IQueryable<_> @>
-                              |> Database.where <@ fun f -> f.Location = city @>
+                              |> Database.where <@ fun f -> f.Location.ToLower() = city.ToLower() @>
                               |> Database.singleOrDefaultAsync
         return forecastOption
                 |> processRequestAsync fetch lastEligibleTime city
