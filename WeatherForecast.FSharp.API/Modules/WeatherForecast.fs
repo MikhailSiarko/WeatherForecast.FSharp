@@ -35,10 +35,7 @@ module WeatherForecast =
         let weathers = createWeatherItems item.Weather timeItem.Id
         let wind = createWind item.Wind timeItem.Id
         (Async.RunSynchronously (Database.saveUpdatesAsync ())) |> ignore
-        timeItem.Main <- main |> AutoMap.mapTo
-        timeItem.Weathers <- weathers |> Array.map AutoMap.mapTo
-        timeItem.Wind <- wind |> AutoMap.mapTo
-        timeItem
+        (main, weathers, wind)
         
     let private createForecastTimeItem date itemId =
         Database.table (fun f -> f.ForecastTimeItems)
@@ -49,29 +46,51 @@ module WeatherForecast =
         Database.table (fun d -> d.ForecastItems)
         |> Database.add (fun m -> m.ForecastId <- forecastId
                                   m.Date <- date)
+        
+    let private mapGroupedForecastItem forecastId (date, items) =
+        let itemEntity = createForecastItem date forecastId
+        (itemEntity, items)
+        
+    let private mapForecastItemInTuple (itemEntity, items) = AutoMap.mapTo<ForecastItem> itemEntity, items
+    
+    let private mapForecastItemToTimeItem itemId (apiItem: ForecastAPI.List) =
+        let timeItemEntity = createForecastTimeItem apiItem.DtTxt itemId
+        (timeItemEntity, apiItem)
+        
+    let private mapForecastItemTupleToTimeItems (item: ForecastItem, apiItems) =
+        let timeItemEntities = apiItems
+                                |> Array.map (mapForecastItemToTimeItem item.Id)
+        (item, timeItemEntities)
+        
+    let private mapTimeItemEntity (entity, item) =
+        let timeItem = (AutoMap.mapTo entity)
+        let (main, weathers, wind) = createWeatherEntities timeItem item
+        timeItem.Main <- main |> AutoMap.mapTo
+        timeItem.Weathers <- weathers |> Array.map AutoMap.mapTo
+        timeItem.Wind <- wind |> AutoMap.mapTo
+        timeItem
+        
+    let private mapItem (item: ForecastItem, timeItemEntities) =
+        let timeItems = timeItemEntities
+                        |> Seq.map mapTimeItemEntity
+                        |> Seq.map AutoMap.mapTo
+                        |> Seq.toArray
+        item.TimeItems <- timeItems
+        item
     
     let saveItemsAsync (root: ForecastAPI.Root) (forecast: Forecast) = async {
-        let groupedItems = root.List
+        let itemTuples = root.List
                             |> Array.groupBy (fun i -> i.DtTxt.Date)
-                            |> Array.map (fun (key, items) -> let itemEntity = createForecastItem key forecast.Id
-                                                              (itemEntity, items))
+                            |> Array.map (mapGroupedForecastItem forecast.Id)
                             |> Database.saveUpdatesAsync
                             |> Async.RunSynchronously
-                            |> Array.map (fun (itemEntity, items) -> (AutoMap.mapTo<ForecastItem> itemEntity, items))
+                            |> Array.map mapForecastItemInTuple
 
-        let items = groupedItems
-                        |> Array.map (fun (item, items) -> let timeItemEntities = items
-                                                                                  |> Array.map (fun i -> let timeItemEntity = createForecastTimeItem i.DtTxt item.Id
-                                                                                                         (timeItemEntity, i))
-                                                           (item, timeItemEntities))
-                        |> Database.saveUpdatesAsync
-                        |> Async.RunSynchronously
-                        |> Array.map (fun (item, timeItemEntities) -> let timeItems = timeItemEntities
-                                                                                      |> Seq.map (fun (timeItemEntity, i) -> createWeatherEntities (AutoMap.mapTo timeItemEntity) i)
-                                                                                      |> Seq.map AutoMap.mapTo
-                                                                                      |> Seq.toArray
-                                                                      item.TimeItems <- timeItems
-                                                                      item)
+        let items = itemTuples
+                    |> Array.map mapForecastItemTupleToTimeItems
+                    |> Database.saveUpdatesAsync
+                    |> Async.RunSynchronously
+                    |> Array.map mapItem
         forecast.Items <- items
         return forecast
     }
