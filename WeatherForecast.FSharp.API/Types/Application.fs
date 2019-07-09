@@ -33,9 +33,9 @@ type User () =
 type ForecastTimeItem () =
     member val Id = Unchecked.defaultof<int64> with get, set
     member val ForecastItemId = Unchecked.defaultof<int64> with get, set
-    member val Time = Unchecked.defaultof<TimeSpan> with get, set
+    member val Time = Unchecked.defaultof<DateTime> with get, set
     member val Main = Unchecked.defaultof<Main> with get, set
-    member val Weather = Unchecked.defaultof<Weather[]> with get, set
+    member val Weathers = Unchecked.defaultof<Weather[]> with get, set
     member val Wind = Unchecked.defaultof<Wind> with get, set
 
 type ForecastItem () =

@@ -42,3 +42,17 @@ module Database =
         do! context.SubmitUpdatesAsync()
         return obj
     }
+    
+    let single (query: IQueryable<_>) map =
+        query
+        |> singleOrDefaultAsync
+        |> Async.RunSynchronously
+        |> Option.get
+        |> map
+    
+    let many (query: IQueryable<_>) map =
+        query
+        |> executeAsync
+        |> Async.RunSynchronously
+        |> Seq.map map
+        |> Seq.toArray

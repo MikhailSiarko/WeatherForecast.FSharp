@@ -12,9 +12,5 @@ type ForecastProfile () as self =
         |> mapMember <@ fun f -> f.Id @> <@ fun e -> e.Id @>
         |> mapMember <@ fun f -> f.CountryCode @> <@ fun e -> e.CountryCode @>
         |> mapMember <@ fun f -> f.City @> <@ fun e -> e.Location @>
-        |> mapMember <@ fun f -> f.Items @> <@ fun e -> e.``main.ForecastItems by Id``
-                                                                |> Seq.executeQueryAsync
-                                                                |> Async.RunSynchronously
-                                                                |> Seq.map mapTo<ForecastItem>
-                                                                |> Seq.toArray @>
+        |> mapMember <@ fun f -> f.Items @> <@ fun _ -> [] @>
         |> ignore
