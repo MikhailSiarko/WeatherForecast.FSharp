@@ -7,6 +7,8 @@ open WeatherForecast.FSharp.API.Types
 open WeatherForecast.FSharp.API.Modules
 
 module WeatherForecast =
+    let private settings = Settings.GetSample()
+    
     let private createMain (item: ForecastAPI.List) timeItemId =
         Database.table (fun i -> i.Mains)
         |> Database.add (fun m -> m.ForecastTimeItemId <- timeItemId
@@ -16,13 +18,12 @@ module WeatherForecast =
                                   m.Humidity <- int64 item.Main.Humidity
                                   m.Pressure <- item.Main.Pressure)
 
-    let private createWeatherItems (weathers: ForecastAPI.Weather[]) timeItemId =
-        weathers
-        |> Array.map (fun w -> Database.table (fun i -> i.Weathers)
-                                |> Database.add (fun i -> i.ForecastTimeItemId <- timeItemId
-                                                          i.Main <- w.Main
-                                                          i.Description <- w.Description
-                                                          i.Icon <- w.Icon))
+    let private createWeather (weather: ForecastAPI.Weather) timeItemId =
+        Database.table (fun i -> i.Weathers)
+        |> Database.add (fun i -> i.ForecastTimeItemId <- timeItemId
+                                  i.Main <- weather.Main
+                                  i.Description <- weather.Description
+                                  i.Icon <- sprintf (Printf.StringFormat<_> settings.IconUrlFormat) weather.Icon)
 
     let private createWind (wind: ForecastAPI.Wind) timeItemId =
         Database.table (fun m -> m.Winds)
@@ -32,10 +33,10 @@ module WeatherForecast =
 
     let private createWeatherEntitiesAsync (timeItem: ForecastTimeItem) (item: ForecastAPI.List) = async {
         let main = createMain item timeItem.Id
-        let weathers = createWeatherItems item.Weather timeItem.Id
+        let weather = createWeather (Array.head item.Weather) timeItem.Id
         let wind = createWind item.Wind timeItem.Id
         do! Database.saveUpdatesAsync ()
-        return (main, weathers, wind)
+        return (main, weather, wind)
     }
         
     let private createForecastTimeItem date itemId =
@@ -65,9 +66,9 @@ module WeatherForecast =
         
     let private mapTimeItemEntityAsync (entity, item) = async {
         let timeItem = (AutoMap.mapTo entity)
-        let! (main, weathers, wind) = createWeatherEntitiesAsync timeItem item
+        let! (main, weather, wind) = createWeatherEntitiesAsync timeItem item
         timeItem.Main <- main |> AutoMap.mapTo
-        timeItem.Weathers <- weathers |> Array.map AutoMap.mapTo
+        timeItem.Weather <- AutoMap.mapTo weather
         timeItem.Wind <- wind |> AutoMap.mapTo
         return timeItem
     }
@@ -109,7 +110,7 @@ module WeatherForecast =
         |> Seq.map (fun t -> let timeItem = AutoMap.mapTo<ForecastTimeItem> t
                              timeItem.Main <- Database.single t.``main.Mains by Id`` AutoMap.mapTo                                                                                                         
                              timeItem.Wind <- Database.single t.``main.Winds by Id`` AutoMap.mapTo                                                                                                                           
-                             timeItem.Weathers <- Database.many t.``main.Weathers by Id`` AutoMap.mapTo
+                             timeItem.Weather <- Database.single t.``main.Weathers by Id`` AutoMap.mapTo
                              timeItem)
         |> Seq.sortBy (fun k -> k.Time)
         |> Seq.toArray

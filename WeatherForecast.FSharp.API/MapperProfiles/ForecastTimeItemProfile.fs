@@ -1,7 +1,6 @@
 namespace WeatherForecast.FSharp.API.MapperProfiles
 
 open AutoMapper
-open FSharp.Data.Sql
 open WeatherForecast.FSharp.API.Types
 
 type ForecastTimeItemProfile () as this =
@@ -12,6 +11,6 @@ type ForecastTimeItemProfile () as this =
         |> mapMember <@ fun i -> i.Time @> <@ fun e -> e.Time @>
         |> mapMember <@ fun i -> i.ForecastItemId @> <@ fun e -> e.ForecastItemId @>
         |> mapMember <@ fun i -> i.Main @> <@ fun _ -> null @>
-        |> mapMember <@ fun i -> i.Weathers @> <@ fun _ -> [] @>
+        |> mapMember <@ fun i -> i.Weather @> <@ fun _ -> null @>
         |> mapMember <@ fun i -> i.Wind @> <@ fun _ -> null @>
         |> ignore

@@ -13,7 +13,8 @@ open System.Reflection
 
 type Startup (configuration: IConfiguration) =
     let apiKey = configuration.GetSection("WeatherForecastServiceApiKey").Value
-    let apiUrl = Printf.StringFormat<string -> string -> string, _> "http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&appid=%s"
+    let apiUrlFormat = configuration.GetSection("APIUrlFormat").Value
+    let apiUrl = Printf.StringFormat<string -> string -> string, _> apiUrlFormat
     
     let configureLoadForecast (_: IServiceProvider) = let expirationTime = configuration.GetValue<float>("ExpirationTime")
                                                       let apiLoadAsync = WeatherAPI.configureLoad apiUrl apiKey
