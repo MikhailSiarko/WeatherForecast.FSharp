@@ -1,4 +1,5 @@
 namespace WeatherForecast.FSharp.API.Modules
+open System.Threading.Tasks
 
 module Database =
     open System.Linq
@@ -39,7 +40,7 @@ module Database =
     let clearUpdates () = context.ClearUpdates() |> ignore
     
     let saveUpdatesAsync obj = async {
-        do! context.SubmitUpdatesAsync()
+        do! Async.AwaitTask (Task.Run(fun () -> lock context context.SubmitUpdates))
         return obj
     }
     
