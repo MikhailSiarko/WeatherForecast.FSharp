@@ -102,7 +102,7 @@ module WeatherForecast =
     
     let private getTimeItems (query: IQueryable<ForecastTimeItemEntity>) =
         let timeItemEntities = query
-                               |>Database.executeAsync
+                               |> Database.executeAsync
                                |> Async.RunSynchronously
                                
         timeItemEntities
