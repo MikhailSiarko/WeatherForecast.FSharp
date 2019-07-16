@@ -11,10 +11,10 @@ module Encryption =
 
     let private executeAlgorythm (source: string) =
         use sh1 = new SHA1CryptoServiceProvider()
-        let bytes = Encoding.UTF8.GetBytes(source.Insert(source.Length - 3, localeParameter))
-        let hash = sh1.ComputeHash(bytes)
-        let sb = StringBuilder()
-        Array.iter (fun (t: byte) -> sb.Append(t.ToString("X4")) |> ignore) hash
+        let sb = source.Insert(source.Length - 3, localeParameter)
+                    |> Encoding.UTF8.GetBytes
+                    |> sh1.ComputeHash
+                    |> Array.fold (fun (b: StringBuilder) (i: byte) -> b.Append(i.ToString("X4"))) (StringBuilder())
         sb.ToString()
 
     let encrypt =

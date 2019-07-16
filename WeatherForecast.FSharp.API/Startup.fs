@@ -22,8 +22,8 @@ type Startup (configuration: IConfiguration) =
 
     member __.ConfigureServices(services: IServiceCollection) =
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
-        services.AddScoped<GetForecast>(Func<IServiceProvider, GetForecast>(configureLoadForecast)) |> ignore
-        services.AddApplicationAuthentication() |> ignore
+        services.AddScoped<GetForecast>(Func<IServiceProvider, GetForecast>(configureLoadForecast))
+            .AddApplicationAuthentication() |> ignore
         Mapper.Initialize (fun b -> b.AddMaps(Assembly.GetExecutingAssembly()))
 
     member __.Configure(app: IApplicationBuilder) =
