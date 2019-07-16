@@ -2,8 +2,11 @@
 
 open Microsoft.AspNetCore.Http
 open FSharp.Data
+open Newtonsoft.Json
 open System
 open System.Threading.Tasks
+
+type Error = { ErrorMessage: string  }
 
 type ExeptionHandlingMiddleware (next: RequestDelegate) =
     member this.InvokeAsync(context: HttpContext) : Task =
@@ -20,4 +23,5 @@ type ExeptionHandlingMiddleware (next: RequestDelegate) =
     member private __.HandleExceptionAsync (context: HttpContext) message =
         context.Response.ContentType <- HttpContentTypes.Json;
         context.Response.StatusCode <- StatusCodes.Status500InternalServerError
-        context.Response.WriteAsync(message) |> Async.AwaitTask;
+        let result = JsonConvert.SerializeObject({ ErrorMessage = message });
+        context.Response.WriteAsync(result) |> Async.AwaitTask;
