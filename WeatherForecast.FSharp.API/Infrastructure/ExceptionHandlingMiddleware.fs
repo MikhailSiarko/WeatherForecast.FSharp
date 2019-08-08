@@ -14,7 +14,7 @@ type ExeptionHandlingMiddleware (next: RequestDelegate) =
             try
                 do! next.Invoke(context) |> Async.AwaitTask
             with
-            | :? OperationCanceledException -> return! Task.CompletedTask |> Async.AwaitTask
+            | :? OperationCanceledException -> return! Async.AwaitTask Task.CompletedTask
             | e -> do! this.HandleExceptionAsync context e.Message
         } |> Async.StartAsTask :> Task
 
