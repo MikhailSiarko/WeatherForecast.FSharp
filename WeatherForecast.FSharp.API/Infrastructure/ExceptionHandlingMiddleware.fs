@@ -8,7 +8,7 @@ open System.Threading.Tasks
 
 type Error = { ErrorMessage: string  }
 
-type ExeptionHandlingMiddleware (next: RequestDelegate) =
+type ExceptionHandlingMiddleware (next: RequestDelegate) =
     member this.InvokeAsync(context: HttpContext) : Task =
         async {
             try

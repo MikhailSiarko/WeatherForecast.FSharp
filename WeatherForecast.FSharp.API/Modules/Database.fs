@@ -22,7 +22,7 @@ module Database =
         return! Seq.tryHeadAsync contextQuery
     }
     
-    let executeAsync quaryable = Seq.executeQueryAsync quaryable
+    let executeAsync queryable = Seq.executeQueryAsync queryable
     
     let deleteAsync predicateQuery = async {
         return! Seq.``delete all items from single table`` predicateQuery

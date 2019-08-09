@@ -1,7 +1,6 @@
 namespace WeatherForecast.FSharp.API.MapperProfiles
 
 open AutoMapper
-open FSharp.Data.Sql
 open WeatherForecast.FSharp.API.Types
 
 type ForecastProfile () as self =

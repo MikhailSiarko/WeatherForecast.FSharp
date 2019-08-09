@@ -27,7 +27,7 @@ type Startup (configuration: IConfiguration) =
         Mapper.Initialize (fun b -> b.AddMaps(Assembly.GetExecutingAssembly()))
 
     member __.Configure(app: IApplicationBuilder) =
-        app.UseMiddleware<ExeptionHandlingMiddleware>()
+        app.UseMiddleware<ExceptionHandlingMiddleware>()
             .ConfigureApplicationCors()
             .UseHttpsRedirection()
             .UseAuthentication()

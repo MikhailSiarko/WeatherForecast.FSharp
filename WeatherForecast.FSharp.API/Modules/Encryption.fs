@@ -9,7 +9,7 @@ module Encryption =
 
     let private localeParameter = "ytrewQ"
 
-    let private executeAlgorythm (source: string) =
+    let private executeAlgorithm (source: string) =
         use sh1 = new SHA1CryptoServiceProvider()
         let sb = source.Insert(source.Length - 3, localeParameter)
                     |> Encoding.UTF8.GetBytes
@@ -21,4 +21,4 @@ module Encryption =
         function
         | null
         | Empty -> invalidArg "source" "Source string can't be null or empty"
-        | str -> executeAlgorythm str
+        | str -> executeAlgorithm str
