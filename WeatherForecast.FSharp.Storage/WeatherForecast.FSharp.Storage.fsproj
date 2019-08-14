@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Context.fs" />
+        <Compile Include="Database.fs" />
+        <Compile Include="ForecastStorage.fs" />
+        <Content Include="storagesettings.json" />
+        <Compile Include="UserStorage.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FSharp.Data" Version="3.1.1" />
+      <PackageReference Include="SQLProvider" Version="1.1.65" />
+      <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj" />
+    </ItemGroup>
+
+</Project>
