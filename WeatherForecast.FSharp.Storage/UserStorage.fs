@@ -3,7 +3,7 @@ module UserStorage
     open WeatherForecast.FSharp.Storage
     open System.Linq
 
-    type UserEntity = AppDbContext.dataContext.``main.UsersEntity``
+    type private UserEntity = AppDbContext.dataContext.``main.UsersEntity``
 
     let private userLoginPredicate (login: string) (entity: UserEntity) = entity.Login.ToLower() = login.ToLower()
     

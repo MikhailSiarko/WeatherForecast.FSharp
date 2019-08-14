@@ -5,17 +5,17 @@ module ForecastStorage
     open FSharp.Data.Sql
     open System
 
-    type ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
+    type private ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
 
-    type ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
+    type private ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
 
-    type ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
+    type private ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
 
-    type MainEntity = AppDbContext.dataContext.``main.MainsEntity``
+    type private MainEntity = AppDbContext.dataContext.``main.MainsEntity``
 
-    type WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
+    type private WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
 
-    type WindEntity = AppDbContext.dataContext.``main.WindsEntity``
+    type private WindEntity = AppDbContext.dataContext.``main.WindsEntity``
     
     let private settings = Settings.GetSample()
 

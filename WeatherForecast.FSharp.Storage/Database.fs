@@ -5,13 +5,13 @@ open FSharp.Data.Sql
 open FSharp.Data.Sql.Common
 open System.Linq
 
-type AppDbContext = SqlDataProvider<
-                        Common.DatabaseProviderTypes.SQLITE,
-                        SQLiteLibrary = SQLiteLibrary.SystemDataSQLite,
-                        ConnectionString = Literals.ConnectionString,
-                        ResolutionPath = Literals.ResPath>
+type internal AppDbContext = SqlDataProvider<
+                                Common.DatabaseProviderTypes.SQLITE,
+                                SQLiteLibrary = SQLiteLibrary.SystemDataSQLite,
+                                ConnectionString = Literals.ConnectionString,
+                                ResolutionPath = Literals.ResPath>
 
-type MainSchema = AppDbContext.dataContext.mainSchema
+type internal MainSchema = AppDbContext.dataContext.mainSchema
 
 type ExistingEntity<'a> = { Value: 'a }
 
