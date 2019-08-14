@@ -1,18 +1,18 @@
-namespace WeatherForecast.FSharp.Storage
+module UserStorage
+    open WeatherForecast.FSharp.Domain
+    open WeatherForecast.FSharp.Storage
+    open System.Linq
 
-open WeatherForecast.FSharp.Domain
+    type UserEntity = AppDbContext.dataContext.``main.UsersEntity``
 
-type UserEntity = AppDbContext.dataContext.``main.UsersEntity``
-
-module UserStorage =
     let private userLoginPredicate (login: string) (entity: UserEntity) = entity.Login.ToLower() = login.ToLower()
     
     let private saveExistingUserAsync (existing: ExistingEntity<User>) = async {
         let user = existing.Value
         let! entity = Database.singleAsync
-                        <@ fun c -> c.Users @>
+                        <@ fun c -> c.Users :> IQueryable<_> @>
                             <@ userLoginPredicate user.Credentials.Login @>
-                                <@ fun u -> u @>
+                            
         entity.Login <- user.Credentials.Login
         entity.Password <- user.Credentials.Password
         do! Database.saveUpdatesAsync()
@@ -29,10 +29,13 @@ module UserStorage =
     }
     
     let tryGetAsync login = async {
-        return! Database.trySingleAsync
-                    <@ fun c -> c.Users @>
-                        <@ userLoginPredicate login @>
-                            <@ fun u -> { Id = u.Id; Credentials = { Password = u.Password; Login = u.Login } } @>
+        let! option = Database.trySingleAsync
+                        <@ fun c -> c.Users :> IQueryable<_> @>
+                            <@ userLoginPredicate login @>
+                            
+        return match option with
+               | Some u -> Some({ Id = u.Id; Credentials = { Password = u.Password; Login = u.Login } })
+               | None -> None
     }
     
     let saveAsync (user: User) = async {

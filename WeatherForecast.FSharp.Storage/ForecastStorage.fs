@@ -1,25 +1,22 @@
-namespace WeatherForecast.FSharp.Storage
+module ForecastStorage
+    open System.Linq
+    open WeatherForecast.FSharp.Storage
+    open WeatherForecast.FSharp.Domain
+    open FSharp.Data.Sql
+    open System
 
-open WeatherForecast.FSharp.Domain
-open FSharp.Data.Sql
-open FSharp.Data
-open System
+    type ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
 
-type ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
+    type ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
 
-type ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
+    type ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
 
-type ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
+    type MainEntity = AppDbContext.dataContext.``main.MainsEntity``
 
-type MainEntity = AppDbContext.dataContext.``main.MainsEntity``
+    type WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
 
-type WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
-
-type WindEntity = AppDbContext.dataContext.``main.WindsEntity``
-
-type Settings = JsonProvider<"storagesettings.json">
-
-module ForecastStorage =
+    type WindEntity = AppDbContext.dataContext.``main.WindsEntity``
+    
     let private settings = Settings.GetSample()
 
     let private forecastLocationPredicate (location: string) (forecastEntity: ForecastEntity) =
@@ -50,6 +47,17 @@ module ForecastStorage =
                         |> Seq.toArray
                         |> Array.map mapTimeItem
         }
+        
+    let private mapForecast (f: ForecastEntity) =
+        {
+            Id = f.Id;
+            CountryCode = f.CountryCode;
+            City = f.Location;
+            Updated = f.Created;
+            Items = f.``main.ForecastItems by Id``
+                    |> Seq.toArray
+                    |> Array.map mapItem
+        }
     
     let private fillItem item (entity: ForecastItemEntity) =
         entity.Date <- item.Date
@@ -79,7 +87,7 @@ module ForecastStorage =
         entity.Main <- weather.Main
         entity.ForecastTimeItemId <- weather.ForecastTimeItemId
     
-    let fillWind wind (entity: WindEntity) =
+    let private fillWind wind (entity: WindEntity) =
         entity.Degree <- wind.Degree
         entity.Speed <- wind.Speed
         entity.ForecastTimeItemId <- wind.ForecastTimeItemId
@@ -164,33 +172,29 @@ module ForecastStorage =
                      
         let now = DateTimeOffset.Now.DateTime
         let! entity =  Database.singleAsync
-                            <@ fun c -> c.Forecasts @>
-                                <@ forecastLocationPredicate forecast.City @>
-                                    <@ fun f -> f @>
+                            <@ fun c -> c.Forecasts :> IQueryable<_> @>
+                                <@ fun f -> f.Location.ToLower() = forecast.City.ToLower() @>
         entity.Created <- now
         do! Database.saveUpdatesAsync()
         return { existingEntity.Value with Items = items; Updated = now }
     }
     
     let tryGetAsync (location: string) = async {
-        return!
+        let! option =
             Database.trySingleAsync
-                <@ fun m -> m.Forecasts @>
-                    <@ forecastLocationPredicate location @>
-                        <@ fun f -> {
-                            Id = f.Id;
-                            CountryCode = f.CountryCode;
-                            City = f.Location;
-                            Updated = f.Created;
-                            Items = f.``main.ForecastItems by Id``
-                                    |> Seq.toArray
-                                    |> Array.map mapItem
-                        } @>
+                <@ fun m -> m.Forecasts :> IQueryable<_> @>
+                    <@ fun f -> f.Location.ToLower() = location.ToLower() @>
+        
+        return match option with
+                | Some f -> f
+                             |> mapForecast
+                             |> Some
+                | None -> None
     }
     
     let saveAsync (forecast: Forecast) = async {
         
-        do! Database.deleteAsync (Database.query <@ fun c -> c.ForecastItems @> <@ fun i -> i.ForecastId = forecast.Id @> <@ fun i -> i @>)
+        do! Database.deleteAsync (Database.query <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecast.Id @>)
         
         return! match Database.exists (fun c -> c.Forecasts) (fun f -> forecastLocationPredicate f.City) forecast with
                 | Exists f -> updateExistingForecastAsync f

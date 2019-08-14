@@ -1,5 +1,15 @@
 namespace WeatherForecast.FSharp.Storage
+
 open System.Threading.Tasks
+open FSharp.Data.Sql
+open FSharp.Data.Sql.Common
+open System.Linq
+
+type AppDbContext = SqlDataProvider<
+                        Common.DatabaseProviderTypes.SQLITE,
+                        SQLiteLibrary = SQLiteLibrary.SystemDataSQLite,
+                        ConnectionString = Literals.ConnectionString,
+                        ResolutionPath = Literals.ResPath>
 
 type MainSchema = AppDbContext.dataContext.mainSchema
 
@@ -10,34 +20,39 @@ type NewEntity<'a> = { Value: 'a }
 type EntityStorageStatus<'e> = Exists of ExistingEntity<'e> | New of NewEntity<'e>
 
 module Database =
-    open FSharp.Data.Sql
-
     let private context = AppDbContext.GetDataContext(SelectOperations.DatabaseSide)
 
     let table selector = selector context.Main
     
-    let query selector predicate map = query {
+    let query (selector: Quotations.Expr<MainSchema -> IQueryable<_>>) predicate = query {
         for u in (%selector) context.Main do
             where ((%predicate) u)
-            select ((%map) u)
+            select (u)
     }
     
-    let singleAsync selector predicate map = async {
-        return! map
-                |> query selector predicate
-                |> Seq.headAsync
-    }
-    
-    let trySingleAsync selector predicate map = async {
-        return! map
-                |> query selector predicate
-                |> Seq.tryHeadAsync
-    }
-    
-    let manyAsync selector predicate map = async {
-        return! map
-                |> query selector predicate
+    let private executeAsync selector predicate = async {
+        return! predicate
+                |> query selector
                 |> Seq.executeQueryAsync
+    }
+    
+    let singleAsync selector predicate = async {
+        let! items = predicate
+                     |> executeAsync selector
+        return items
+               |> Seq.head
+    }
+    
+    let trySingleAsync selector predicate = async {
+        let! items = predicate
+                     |> executeAsync selector
+        return items
+               |> Seq.tryHead
+    }
+    
+    let manyAsync selector predicate = async {
+        return! predicate
+                |> executeAsync selector
     }
     
     let deleteAsync predicateQuery = async {

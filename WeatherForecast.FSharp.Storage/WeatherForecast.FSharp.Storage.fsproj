@@ -5,10 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Context.fs" />
+        <Compile Include="Settings.fs" />
         <Compile Include="Database.fs" />
         <Compile Include="ForecastStorage.fs" />
-        <Content Include="storagesettings.json" />
+        <Content Include="storagesettings.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Compile Include="UserStorage.fs" />
     </ItemGroup>
 
