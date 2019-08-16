@@ -57,6 +57,6 @@ module Forecast =
     
     let validate (f, expInterval) =
         let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * expInterval)
-        match isValid f.Updated expirationTime with
+        match isValid (f.Updated.ToUniversalTime()) expirationTime with
         | true -> Ok(f)
         | false -> Expired(f)

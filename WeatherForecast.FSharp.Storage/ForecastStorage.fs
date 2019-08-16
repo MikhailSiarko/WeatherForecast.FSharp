@@ -167,7 +167,7 @@ module ForecastStorage
                     |> Array.map (fun i -> { i with ForecastId = forecast.Id })
                     |> saveItemsAsync
                      
-        let now = DateTimeOffset.Now.DateTime
+        let now = DateTime.UtcNow
         let! entity =  Database.singleAsync
                             <@ fun c -> c.Forecasts :> IQueryable<_> @>
                                 <@ fun f -> f.Location.ToLower() = forecast.City.ToLower() @>
@@ -190,11 +190,11 @@ module ForecastStorage
     }
     
     let saveAsync (forecast: Forecast) = async {
-        
-        do! Database.deleteAsync (Database.query <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecast.Id @>)
-        
         return! match Database.exists (fun c -> c.Forecasts :> IQueryable<_>) (fun f -> forecastLocationPredicate f.City) forecast with
-                | Exists f -> updateExistingForecastAsync f
+                | Exists f ->
+                    Database.deleteAsync (Database.query <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecast.Id @>)
+                    |> Async.RunSynchronously
+                    updateExistingForecastAsync f
                 | New f -> saveNewForecastAsync f
     }
 

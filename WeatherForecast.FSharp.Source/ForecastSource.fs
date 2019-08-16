@@ -4,9 +4,6 @@ module ForecastSource
     open WeatherForecast.FSharp.Source
     
     let private settings = Settings.GetSample()
-    
-    let private selectMany (ab:'a -> 'b []) (abc:'a -> 'b -> 'c) input =
-        input |> Array.collect (fun a -> ab a |> Array.map (fun b -> abc a b))
         
     let private mapWeather (w: ForecastSourceAPI.Weather) =
         {
@@ -56,15 +53,13 @@ module ForecastSource
             Updated = DateTime.UtcNow;
             Items = forecast.List
                     |> Array.groupBy (fun i -> i.DtTxt.ToUniversalTime().Date)
-                    |> Array.map (fun (date, items) -> items
-                                                        |> Array.map (fun _ -> {
+                    |> Array.map (fun (date, items) ->  {
                                                             Id = Unchecked.defaultof<int64>;
                                                             ForecastId = Unchecked.defaultof<int64>;
                                                             Date = date.ToUniversalTime();
                                                             TimeItems = items
                                                                         |> Array.map mapTimeItem
-                                                        }))
-                    |> selectMany (fun i -> i) (fun _ k -> k) 
+                                                        })
         }
     
     let getAsync apiKey location = async {

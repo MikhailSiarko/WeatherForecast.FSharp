@@ -57,6 +57,7 @@ module Database =
     
     let deleteAsync predicateQuery = async {
         let! _ = Seq.``delete all items from single table`` predicateQuery
+        do! context.SubmitUpdatesAsync()
         return ()
     }
     
