@@ -176,59 +176,10 @@ module ForecastStorage
         return { existingEntity.Value with Items = items; Updated = now }
     }
     
-    let private deleteTimeItemAsync (main, weather, wind) = async {
-        return! Async.Parallel ([
-                        Seq.``delete all items from single table`` main
-                        Seq.``delete all items from single table`` weather
-                        Seq.``delete all items from single table`` wind
-                    ])
-    }
-    
-    let rec private deleteTimeItemDetailsAsync tuples = async {                  
-        let! _ = tuples
-                 |> Seq.map (fun t -> deleteTimeItemAsync t)
-                 |> Async.Parallel
-        return ()
-    }
-    
-    let private deleteTimeItemsDetailsAsync (queries: IQueryable<IQueryable<ForecastTimeItemEntity>>) = async {
-        let! _ = queries
-                 |> Seq.executeQueryAsync
-                 |> Async.RunSynchronously
-                 |> Seq.map (fun i ->  i
-                                       |> Database.select <@ fun t -> (t.``main.Mains by Id``, t.``main.Weathers by Id``, t.``main.Winds by Id``) @>
-                                       |> deleteTimeItemDetailsAsync)
-                 |> Async.Parallel
-        return ()
-    }
-    
-    let private deleteTimeItemsAsync (queries: IQueryable<IQueryable<ForecastTimeItemEntity>>) = async {
-        let! _ = queries
-                 |> Seq.executeQueryAsync
-                 |> Async.RunSynchronously
-                 |> Seq.map Seq.``delete all items from single table``
-                 |> Async.Parallel
-        return ()
-    }
-    
-    let private deleteItemsAsync query = async {
-        let! _ = query
+    let private deleteForecastItemsAsync forecastId = async {
+        let! _ = Database.queryTo <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecastId @>
                  |> Seq.``delete all items from single table``
         return ()
-    }
-    
-    let private deleteForecastItemsAsync forecastId = async {
-        let itemsQuery = Database.queryTo <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecastId @>
-        let timeItemQueries = itemsQuery
-                               |> Database.select <@ fun i -> i.``main.ForecastTimeItems by Id`` @>
-                      
-        let deleteTimeItemsDetails = timeItemQueries |> deleteTimeItemsDetailsAsync
-        
-        let deleteTimeItems = timeItemQueries |> deleteTimeItemsAsync
-        
-        let deleteItems = itemsQuery |> deleteItemsAsync
-        
-        return! [ deleteTimeItemsDetails; deleteTimeItems; deleteItems ] |> Async.Parallel
     }
     
     let tryGetAsync (location: string) = async {
