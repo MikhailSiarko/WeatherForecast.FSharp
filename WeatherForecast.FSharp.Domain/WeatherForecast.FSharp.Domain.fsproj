@@ -7,7 +7,6 @@
     <ItemGroup>
         <Compile Include="Forecast.fs" />
         <Compile Include="User.fs" />
-        <Compile Include="Encryption.fs" />
     </ItemGroup>
 
 </Project>

@@ -50,17 +50,13 @@ type Forecast = {
     Items: ForecastItem[]
 }
 
-type ExpiredForecast = { Forecast: Forecast; ExpiredAt: DateTime }
-
-type ValidForecast = { Forecast: Forecast }
-
-type ForecastState = Valid of ValidForecast | Expired of ExpiredForecast
+type ForecastState = Ok of Forecast | Expired of Forecast
 
 module Forecast =
     let private isValid date expTime = date >= expTime
     
     let validate (f, expInterval) =
-        let expirationTime = DateTimeOffset.Now.AddMinutes(-1.0 * expInterval).DateTime
+        let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * expInterval)
         match isValid f.Updated expirationTime with
-        | true -> Valid({ Forecast = f })
-        | false -> Expired({ Forecast = f; ExpiredAt = expirationTime })
+        | true -> Ok(f)
+        | false -> Expired(f)

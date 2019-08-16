@@ -5,19 +5,17 @@ module ForecastStorage
     open FSharp.Data.Sql
     open System
 
-    type private ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
-
-    type private ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
-
-    type private ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
-
-    type private MainEntity = AppDbContext.dataContext.``main.MainsEntity``
-
-    type private WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
-
-    type private WindEntity = AppDbContext.dataContext.``main.WindsEntity``
+    type internal ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
     
-    let private settings = Settings.GetSample()
+    type internal ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
+    
+    type internal ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
+    
+    type internal MainEntity = AppDbContext.dataContext.``main.MainsEntity``
+    
+    type internal WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
+    
+    type internal WindEntity = AppDbContext.dataContext.``main.WindsEntity``
 
     let private forecastLocationPredicate (location: string) (forecastEntity: ForecastEntity) =
         forecastEntity.Location.ToLower() = location.ToLower()
@@ -68,7 +66,6 @@ module ForecastStorage
         entity.ForecastItemId <- timeItem.ForecastItemId
     
     let private fillForecast forecast (entity: ForecastEntity) =
-        entity.Id <- forecast.Id
         entity.Location <- forecast.City
         entity.CountryCode <- forecast.CountryCode
         entity.Created <- DateTimeOffset.Now.DateTime
@@ -83,7 +80,7 @@ module ForecastStorage
     
     let private fillWeather weather (entity: WeatherEntity) =
         entity.Description <- weather.Description
-        entity.Icon <- sprintf (Printf.StringFormat<_> settings.IconUrlFormat) weather.Icon
+        entity.Icon <- weather.Icon
         entity.Main <- weather.Main
         entity.ForecastTimeItemId <- weather.ForecastTimeItemId
     
@@ -196,7 +193,7 @@ module ForecastStorage
         
         do! Database.deleteAsync (Database.query <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecast.Id @>)
         
-        return! match Database.exists (fun c -> c.Forecasts) (fun f -> forecastLocationPredicate f.City) forecast with
+        return! match Database.exists (fun c -> c.Forecasts :> IQueryable<_>) (fun f -> forecastLocationPredicate f.City) forecast with
                 | Exists f -> updateExistingForecastAsync f
                 | New f -> saveNewForecastAsync f
     }

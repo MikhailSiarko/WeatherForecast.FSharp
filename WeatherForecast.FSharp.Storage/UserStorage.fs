@@ -1,9 +1,10 @@
-module UserStorage
-    open WeatherForecast.FSharp.Domain
-    open WeatherForecast.FSharp.Storage
-    open System.Linq
+namespace WeatherForecast.FSharp.Storage
 
-    type private UserEntity = AppDbContext.dataContext.``main.UsersEntity``
+open WeatherForecast.FSharp.Domain
+open System.Linq
+    
+module UserStorage =
+    type internal UserEntity = AppDbContext.dataContext.``main.UsersEntity``
 
     let private userLoginPredicate (login: string) (entity: UserEntity) = entity.Login.ToLower() = login.ToLower()
     
@@ -11,35 +12,35 @@ module UserStorage
         let user = existing.Value
         let! entity = Database.singleAsync
                         <@ fun c -> c.Users :> IQueryable<_> @>
-                            <@ userLoginPredicate user.Credentials.Login @>
+                            <@ userLoginPredicate user.Login @>
                             
-        entity.Login <- user.Credentials.Login
-        entity.Password <- user.Credentials.Password
+        entity.Login <- user.Login
+        entity.Password <- user.Password
         do! Database.saveUpdatesAsync()
-        return { user with Credentials = { Login = entity.Login; Password = entity.Password } }
+        return { user with Login = entity.Login; Password = entity.Password }
     }
     
     let private saveNewUserAsync (newUser: NewEntity<User>) = async {
         let user = newUser.Value
         let entity = Database.table (fun c -> c.Users)
-                     |> Database.add (fun u -> u.Login <- user.Credentials.Login
-                                               u.Password <- user.Credentials.Password)
+                     |> Database.add (fun u -> u.Login <- user.Login
+                                               u.Password <- user.Password)
         do! Database.saveUpdatesAsync()
         return { user with Id = entity.Id }
     }
     
-    let tryGetAsync login = async {
+    let tryGetAsync (login: string) = async {
         let! option = Database.trySingleAsync
                         <@ fun c -> c.Users :> IQueryable<_> @>
-                            <@ userLoginPredicate login @>
+                            <@ fun u -> u.Login.ToLower() = login.ToLower() @>
                             
         return match option with
-               | Some u -> Some({ Id = u.Id; Credentials = { Password = u.Password; Login = u.Login } })
+               | Some u -> Some({ Id = u.Id; Password = u.Password; Login = u.Login })
                | None -> None
     }
     
     let saveAsync (user: User) = async {
-        return! match Database.exists (fun c -> c.Users) (fun u -> userLoginPredicate u.Credentials.Login) user with
+        return! match Database.exists (fun c -> c.Users :> IQueryable<_>) (fun u -> userLoginPredicate u.Login) user with
                 | Exists u -> saveExistingUserAsync u
                 | New u -> saveNewUserAsync u
     }

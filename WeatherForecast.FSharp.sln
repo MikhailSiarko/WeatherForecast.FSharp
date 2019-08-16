@@ -16,6 +16,12 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Doma
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Storage", "WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj", "{3875A41E-BCC2-40B6-9687-56A9C9478BB1}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain.Tests", "WeatherForecast.FSharp.Domain.Tests\WeatherForecast.FSharp.Domain.Tests.fsproj", "{39106170-2E27-4DE8-90FF-7EEDAE2C2974}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Authentication", "WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj", "{936E2E47-97E2-4B61-A978-F3244E065712}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Source", "WeatherForecast.FSharp.Source\WeatherForecast.FSharp.Source.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +44,18 @@ Global
 		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
