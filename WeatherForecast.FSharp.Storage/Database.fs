@@ -24,15 +24,20 @@ module Database =
 
     let table selector = selector context.Main
     
-    let query (selector: Quotations.Expr<MainSchema -> IQueryable<_>>) predicate = query {
+    let queryTo (selector: Quotations.Expr<MainSchema -> IQueryable<_>>) predicate = query {
         for u in (%selector) context.Main do
             where ((%predicate) u)
             select (u)
     }
     
+    let select (selector: Quotations.Expr<'a -> 'b>) (queryable: IQueryable<'a>) = query {
+        for t in queryable do
+            select ((%selector) t)
+    }
+    
     let private executeAsync selector predicate = async {
         return! predicate
-                |> query selector
+                |> queryTo selector
                 |> Seq.executeQueryAsync
     }
     
@@ -53,12 +58,6 @@ module Database =
     let manyAsync selector predicate = async {
         return! predicate
                 |> executeAsync selector
-    }
-    
-    let deleteAsync predicateQuery = async {
-        let! _ = Seq.``delete all items from single table`` predicateQuery
-        do! context.SubmitUpdatesAsync()
-        return ()
     }
     
     let inline add (action: 'a -> unit) (table: ^t) =
