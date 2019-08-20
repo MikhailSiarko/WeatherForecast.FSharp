@@ -8,11 +8,11 @@ module UserTests
         let user = { Id = 1L; Login = "login"; Password = "123456" }
         
         match User.validatePassword password user with
-        | Valid u ->
+        | PasswordStatus.Valid u ->
             Assert.IsType(typeof<User>, u)
             Assert.Equal(user, u)
             Assert.True(true)
-        | Invalid -> Assert.False(true)
+        | PasswordStatus.Invalid -> Assert.False(true)
         
     [<Fact>]
     let ``Validate Credentials. Given: Login: 'm$mail.com', Password: '123456', Password to compare: '654321'; Expected Result": Invalid`` () =
@@ -20,8 +20,8 @@ module UserTests
         let user = { Id = 1L; Login = "login"; Password = "654321" }
         
         match User.validatePassword password user with
-        | Valid _ -> Assert.False(true)
-        | Invalid -> Assert.True(true)
+        | PasswordStatus.Valid _ -> Assert.False(true)
+        | PasswordStatus.Invalid -> Assert.True(true)
         
     [<Fact>]
     let ``Validate Credentials. Given: Login: 'm$mail.com', Password: '123456', Password to compare: null; Expected Result": Invalid`` () =
@@ -29,5 +29,5 @@ module UserTests
         let user = { Id = 1L; Login = "login"; Password = "654321" }
         
         match User.validatePassword password user with
-        | Valid _ -> Assert.False(true)
-        | Invalid -> Assert.True(true)
+        | PasswordStatus.Valid _ -> Assert.False(true)
+        | PasswordStatus.Invalid -> Assert.True(true)
