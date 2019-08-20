@@ -1,7 +1,7 @@
-module ForecastSource
+module ForecastProvider
     open System
     open WeatherForecast.FSharp.Domain
-    open WeatherForecast.FSharp.Source
+    open WeatherForecast.FSharp.ForecastProvider
     
     let private settings = Settings.GetSample()
         

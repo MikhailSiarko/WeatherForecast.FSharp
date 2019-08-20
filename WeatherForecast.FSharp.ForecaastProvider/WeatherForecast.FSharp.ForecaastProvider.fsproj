@@ -10,7 +10,7 @@
         </Content>
         <Content Include="sourcesettings.json" />
         <Compile Include="Settings.fs" />
-        <Compile Include="ForecastSource.fs" />
+        <Compile Include="ForecastProvider.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -4,13 +4,13 @@ open WeatherForecast.FSharp.Domain
 
 module WeatherForecast =
     let private requestForecastAsync apiKey location = async {
-        return! ForecastSource.getAsync apiKey location
+        return! ForecastProvider.getAsync apiKey location
                 |> Async.RunSynchronously
                 |> ForecastStorage.saveAsync  
     }
     
     let private requestUpdateAsync apiKey forecast = async {
-        let! update = ForecastSource.getAsync apiKey forecast.City
+        let! update = ForecastProvider.getAsync apiKey forecast.City
         return! ForecastStorage.saveAsync { forecast with Items = update.Items }
     }
     

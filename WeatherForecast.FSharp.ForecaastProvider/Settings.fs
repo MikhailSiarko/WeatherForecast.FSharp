@@ -1,4 +1,4 @@
-namespace WeatherForecast.FSharp.Source
+namespace WeatherForecast.FSharp.ForecastProvider
 
 open FSharp.Data
 
