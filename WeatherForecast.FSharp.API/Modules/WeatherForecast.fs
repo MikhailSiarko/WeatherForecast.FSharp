@@ -18,9 +18,9 @@ module WeatherForecast =
         let! forecastOption = ForecastStorage.tryGetAsync location
         return match forecastOption with
                | Some f -> match Forecast.validate (f, expirationTime) with
-                           | Ok f -> f
-                           | Expired f -> requestUpdateAsync apiKey f
-                                          |> Async.RunSynchronously
+                           | Valid -> f
+                           | Expired -> requestUpdateAsync apiKey f
+                                        |> Async.RunSynchronously
                | None -> requestForecastAsync apiKey location
                          |> Async.RunSynchronously
     }

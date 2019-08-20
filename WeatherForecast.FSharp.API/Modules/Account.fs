@@ -21,8 +21,8 @@ module Account =
     
     let private processPasswordValidation onValid =
         function
-        | Valid user -> onValid user
-        | Invalid -> failwith "You've entered an incorrect password"
+        | PasswordStatus.Valid user -> onValid user
+        | PasswordStatus.Invalid -> failwith "You've entered an incorrect password"
     
     let private passwordsConfirmed (pas, conf) =
         match pas = conf with

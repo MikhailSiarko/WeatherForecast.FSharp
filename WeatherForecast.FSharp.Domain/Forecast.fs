@@ -50,7 +50,7 @@ type Forecast = {
     Items: ForecastItem[]
 }
 
-type ForecastState = Ok of Forecast | Expired of Forecast
+type ForecastState = Valid | Expired
 
 module Forecast =
     let private isValid date expTime = date >= expTime
@@ -58,5 +58,5 @@ module Forecast =
     let validate (f, expInterval) =
         let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * expInterval)
         match isValid (f.Updated.ToUniversalTime()) expirationTime with
-        | true -> Ok(f)
-        | false -> Expired(f)
+        | true -> Valid
+        | false -> Expired
