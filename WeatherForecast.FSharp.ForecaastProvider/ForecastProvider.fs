@@ -46,7 +46,7 @@ module ForecastProvider
         }
     
     let private map (forecast: ForecastSourceAPI.Root) =
-        {
+        ValidForecast {
             Id = Unchecked.defaultof<int64>;
             CountryCode = forecast.City.Country;
             City = forecast.City.Name;

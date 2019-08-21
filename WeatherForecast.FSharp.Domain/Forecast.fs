@@ -50,7 +50,11 @@ type Forecast = {
     Items: ForecastItem[]
 }
 
-type ForecastState = Valid | Expired
+type ValidForecast = ValidForecast of Forecast
+
+type ExpiredForecast = ExpiredForecast of Forecast
+
+type ForecastState = Valid of ValidForecast | Expired of ExpiredForecast
 
 module Forecast =
     let private isValid date expTime = date >= expTime
@@ -58,5 +62,10 @@ module Forecast =
     let validate (f, expInterval) =
         let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * expInterval)
         match isValid (f.Updated.ToUniversalTime()) expirationTime with
-        | true -> Valid
-        | false -> Expired
+        | true -> Valid(ValidForecast f)
+        | false -> Expired(ExpiredForecast f)
+        
+    let update (ExpiredForecast expired) (ValidForecast valid) =
+        match expired.City = valid.City with
+        | true -> ValidForecast { valid with Id = expired.Id }
+        | false -> failwith "The forecast information is for another location"
