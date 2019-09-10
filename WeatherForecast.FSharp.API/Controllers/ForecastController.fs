@@ -4,6 +4,7 @@ open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open WeatherForecast.FSharp.API.Modules
+open WeatherForecast.FSharp.Domain
 
 [<Route("api/[controller]")>]
 [<ApiController>]
@@ -12,7 +13,7 @@ type ForecastController (configuration: IConfiguration) =
     inherit ControllerBase()
     
     let apiKey = configuration.GetSection("WeatherForecastServiceApiKey").Value
-    let expirationTime = configuration.GetValue<float>("ExpirationTime")                                                
+    let expirationTime = configuration.GetValue<float<min>>("ExpirationTime")                                                
     let getForecastAsync = WeatherForecast.getAsync apiKey expirationTime
     
     [<HttpGet("{city}")>]

@@ -56,11 +56,14 @@ type ExpiredForecast = ExpiredForecast of Forecast
 
 type ForecastState = Valid of ValidForecast | Expired of ExpiredForecast
 
+[<Measure>]
+type min
+
 module Forecast =
     let private isValid date expTime = date >= expTime
     
-    let validate (f, expInterval) =
-        let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * expInterval)
+    let validate (f, expInterval: float<min>) =
+        let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * float expInterval)
         match isValid (f.Updated.ToUniversalTime()) expirationTime with
         | true -> Valid(ValidForecast f)
         | false -> Expired(ExpiredForecast f)
