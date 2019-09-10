@@ -1,5 +1,6 @@
 namespace WeatherForecast.FSharp.API.Modules
 
+open System
 open WeatherForecast.FSharp.Domain
 
 module WeatherForecast =
@@ -17,10 +18,10 @@ module WeatherForecast =
                 |> ForecastStorage.saveAsync
     }
     
-    let getAsync apiKey expirationTime location = async {
+    let getAsync apiKey expiredAfter location = async {
         let! forecastOption = ForecastStorage.tryGetAsync location
         return match forecastOption with
-               | Some f -> match Forecast.validate (f, expirationTime) with
+               | Some f -> match Forecast.validate (f, DateTime.UtcNow, expiredAfter) with
                            | Valid(ValidForecast v) -> v
                            | Expired e -> requestUpdateAsync apiKey e
                                           |> Async.RunSynchronously

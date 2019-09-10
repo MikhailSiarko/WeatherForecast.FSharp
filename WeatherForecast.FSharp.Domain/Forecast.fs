@@ -62,8 +62,8 @@ type min
 module Forecast =
     let private isValid date expTime = date >= expTime
     
-    let validate (f, expInterval: float<min>) =
-        let expirationTime = DateTime.UtcNow.AddMinutes(-1.0 * float expInterval)
+    let validate (f, validationDate: DateTime, expiredAfter: float<min>) =
+        let expirationTime = validationDate.AddMinutes(-1.0 * float expiredAfter)
         match isValid (f.Updated.ToUniversalTime()) expirationTime with
         | true -> Valid(ValidForecast f)
         | false -> Expired(ExpiredForecast f)
