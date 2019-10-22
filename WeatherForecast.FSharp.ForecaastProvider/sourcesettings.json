@@ -1,0 +1,4 @@
+{
+  "IconUrlFormat": "http://openweathermap.org/img/wn/%s@2x.png",
+  "APIUrlFormat": "http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&appid=%s"
+}

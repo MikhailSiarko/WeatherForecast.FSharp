@@ -31,7 +31,7 @@ type Initial () =
         this.Create.Table("ForecastTimeItems")
             .WithColumn("Id").AsInt64().Indexed("IX_ForecastTimeItems_Id").Identity().PrimaryKey("PK_ForecastTimeItems").NotNullable()
             .WithColumn("Time").AsTime().NotNullable()
-            .WithColumn("ForecastItemId").AsInt64().Indexed("IX_Mains_ForecastItemId").ForeignKey("FK_Mains_ForecastItems_Id", "ForecastItems", "Id").OnDelete(Rule.Cascade).NotNullable()
+            .WithColumn("ForecastItemId").AsInt64().Indexed("IX_ForecastTimeItems_ForecastItemId").ForeignKey("FK_ForecastTimeItems_ForecastItems_Id", "ForecastItems", "Id").OnDelete(Rule.Cascade).NotNullable()
         |> ignore
 
         this.Create.Table("Mains")

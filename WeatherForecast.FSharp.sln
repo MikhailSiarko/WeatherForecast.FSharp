@@ -12,6 +12,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain", "WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj", "{14AEC164-D091-4147-94C7-60E03A084825}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Storage", "WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj", "{3875A41E-BCC2-40B6-9687-56A9C9478BB1}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain.Tests", "WeatherForecast.FSharp.Domain.Tests\WeatherForecast.FSharp.Domain.Tests.fsproj", "{39106170-2E27-4DE8-90FF-7EEDAE2C2974}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Authentication", "WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj", "{936E2E47-97E2-4B61-A978-F3244E065712}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.ForecaastProvider", "WeatherForecast.FSharp.ForecaastProvider\WeatherForecast.FSharp.ForecaastProvider.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +36,26 @@ Global
 		{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14AEC164-D091-4147-94C7-60E03A084825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14AEC164-D091-4147-94C7-60E03A084825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14AEC164-D091-4147-94C7-60E03A084825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14AEC164-D091-4147-94C7-60E03A084825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3875A41E-BCC2-40B6-9687-56A9C9478BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39106170-2E27-4DE8-90FF-7EEDAE2C2974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{936E2E47-97E2-4B61-A978-F3244E065712}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

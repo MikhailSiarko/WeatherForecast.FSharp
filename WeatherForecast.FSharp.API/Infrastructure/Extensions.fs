@@ -3,7 +3,7 @@
 [<AutoOpen>]
 module ServiceCollectionExtensions =
     open Microsoft.AspNetCore.Authentication.JwtBearer
-    open WeatherForecast.FSharp.API.Modules
+    open WeatherForecast.FSharp.Authentication
     open Microsoft.IdentityModel.Tokens
     open Microsoft.Extensions.DependencyInjection
 

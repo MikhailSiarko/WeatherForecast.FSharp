@@ -1,14 +1,15 @@
-namespace WeatherForecast.FSharp.API.Modules
+namespace WeatherForecast.FSharp.Authentication
+
+open Microsoft.IdentityModel.Tokens
+open System.IdentityModel.Tokens.Jwt
+open WeatherForecast.FSharp.Domain
+open System.Security.Claims
+open System
+
+type AuthenticationSource = { User: User; Token: string }
 
 module Authentication =
-    open Microsoft.IdentityModel.Tokens
-    open WeatherForecast.FSharp.API.Types
-    open System.IdentityModel.Tokens.Jwt
-    open System.Security.Claims
-    open System
-    open AutoMapper
-
-    let private generateClaims (user: UserEntity) =
+    let private generateClaims (user: User) =
         [ Claim(ClaimsIdentity.DefaultNameClaimType, user.Login); Claim("Id", user.Id.ToString()) ]
 
     let private generateToken claims =
@@ -20,9 +21,6 @@ module Authentication =
                          expires = Nullable (now.Add(TimeSpan.FromMinutes(float JwtOptions.Lifetime))),
                          signingCredentials = SigningCredentials(JwtOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256))
 
-    let private encodeSecurityToken<'a when 'a :> UserEntity> = generateClaims >> generateToken >> JwtSecurityTokenHandler().WriteToken
+    let private encodeSecurityToken = generateClaims >> generateToken >> JwtSecurityTokenHandler().WriteToken
 
-    let authenticate user =
-        user
-        |> encodeSecurityToken
-        |> AuthenticationData.Create (mapTo<User> user)
+    let getAuthenticationSource user = { User = user; Token = encodeSecurityToken user }

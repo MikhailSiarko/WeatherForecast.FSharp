@@ -6,37 +6,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Types\Application.fs" />
-    <Compile Include="Types\Weather.fs" />
-    <Compile Include="Types\Context.fs" />
-    <Compile Include="Modules\JwtOptions.fs" />
-    <Compile Include="Infrastructure\Mapping.fs" />
+    <Compile Include="RequestData\AccountData.fs" />
+    <Compile Include="Modules\Encryption.fs" />
+    <Compile Include="Modules\Account.fs" />
+    <Compile Include="Modules\WeatherForecast.fs" />
     <Compile Include="Infrastructure\Extensions.fs" />
     <Compile Include="Infrastructure\ExceptionHandlingMiddleware.fs" />
-    <Compile Include="Modules\Encryption.fs" />
-    <Compile Include="Modules\Authentication.fs" />
-    <Compile Include="Modules\Database.fs" />
-    <Compile Include="Modules\WeatherForecast.fs" />
-    <Compile Include="Modules\Account.fs" />
     <Compile Include="Controllers\AccountController.fs" />
     <Compile Include="Controllers\ForecastController.fs" />
-    <Compile Include="MapperProfiles\ForecastItemProfile.fs" />
-    <Compile Include="MapperProfiles\ForecastProfile.fs" />
-    <Compile Include="MapperProfiles\MainProfile.fs" />
-    <Compile Include="MapperProfiles\UserProfile.fs" />
-    <Compile Include="MapperProfiles\WeatherProfile.fs" />
-    <Compile Include="MapperProfiles\WindProfile.fs" />
-    <Compile Include="MapperProfiles\ForecastTimeItemProfile.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
-    <PackageReference Include="AutoMapper" Version="8.1.0" />
-    <PackageReference Include="FSharp.Data" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
     <PackageReference Include="FSharp.Core" Version="4.6.2" />
-    <PackageReference Include="SQLProvider" Version="1.1.65" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Types\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="NewFolder\**" />
+    <Content Remove="Types\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj" />
+    <ProjectReference Include="..\WeatherForecast.FSharp.ForecaastProvider\WeatherForecast.FSharp.ForecaastProvider.fsproj" />
+    <ProjectReference Include="..\WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Samples\data.json" />
   </ItemGroup>
 </Project>

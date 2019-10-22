@@ -1,40 +1,54 @@
 namespace WeatherForecast.FSharp.API.Modules
-open System.Linq
 
-module Account =
-    open WeatherForecast.FSharp.API.Modules
-    open WeatherForecast.FSharp.API.Types
+open WeatherForecast.FSharp.Authentication
+open WeatherForecast.FSharp.Domain
+open WeatherForecast.FSharp.Storage
 
-    let private validatePasswords first second =
-        if first = second then
-            ()
-        else
-            failwith "Passwords do not match"
+type UserInfo = { Id: int64; Login: string }
+
+type AuthenticationData =
+    { Token: string; User: UserInfo }
+    static member Create (authSource: AuthenticationSource) =
+        { Token = authSource.Token; User = { Id = authSource.User.Id; Login = authSource.User.Login } }
     
-    let private getUserAsync login = async {
-        return! Database.queryTo <@ fun m -> m.Users :> IQueryable<_> @>
-                |> Database.where <@ fun u -> u.Login = login @>
-                |> Database.singleOrDefaultAsync
+type PasswordConfirmationResult = Confirmed | NotConfirmed
+
+module Account =    
+    let private processUserResult login =
+        function
+        | Some u -> u
+        | None -> failwithf "User %s wasn't found" login
+    
+    let private processPasswordValidation onValid =
+        function
+        | PasswordStatus.Valid user -> onValid user
+        | PasswordStatus.Invalid -> failwith "You've entered an incorrect password"
+    
+    let private passwordsConfirmed (pas, conf) =
+        match pas = conf with
+        | true -> Confirmed
+        | false -> NotConfirmed
+        
+    let private registerUserAsync login password = async {
+        let! userOption = UserStorage.tryGetAsync login
+        return match userOption with
+               | None -> { Id = Unchecked.defaultof<int64>; Login = login; Password = Encryption.encrypt password }
+                         |> UserStorage.saveAsync
+                         |> Async.RunSynchronously
+                         |> (Authentication.getAuthenticationSource >> AuthenticationData.Create)
+               | Some u -> failwithf "User with login %s already exists" u.Login
     }
     
-    let loginAsync (loginData: LoginData) = async {
-        let! userOption = getUserAsync loginData.Login
-        return match userOption with
-                | Some x when x.Password = (Encryption.encrypt loginData.Password) -> Authentication.authenticate x
-                | Some _ -> failwith "You've entered an incorrect password"
-                | None -> failwithf "User %s wasn't found" loginData.Login
+    let loginAsync (credentials: Credentials) = async {
+        let! userOption = UserStorage.tryGetAsync credentials.Login
+        return userOption
+            |> processUserResult credentials.Login
+            |> (Encryption.encrypt >> User.validatePassword) credentials.Password
+            |> processPasswordValidation (Authentication.getAuthenticationSource >> AuthenticationData.Create)
     }
-
-    let registerAsync (registerData: RegisterData) = async {
-        let! userOption = getUserAsync registerData.Login
-        return match userOption with
-                | None -> validatePasswords registerData.Password registerData.ConfirmPassword |> ignore
-                          Database.clearUpdates ()
-                          let encrypted = Encryption.encrypt registerData.Password
-                          Database.table (fun m -> m.Users)
-                          |> Database.add (fun u -> u.Login <- registerData.Login; u.Password <- encrypted)
-                          |> Database.saveUpdatesAsync
-                          |> Async.RunSynchronously
-                          |> Authentication.authenticate
-                | Some x -> failwithf "User with login %s already exists" x.Login
+        
+    let registerAsync (login: string, password: string, confirmPassword) = async {
+        return! match passwordsConfirmed (password, confirmPassword) with
+                | Confirmed -> registerUserAsync login password
+                | NotConfirmed -> failwith "Password is not confirmed"        
     }
