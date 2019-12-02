@@ -20,7 +20,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Doma
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Authentication", "WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj", "{936E2E47-97E2-4B61-A978-F3244E065712}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.ForecaastProvider", "WeatherForecast.FSharp.ForecaastProvider\WeatherForecast.FSharp.ForecaastProvider.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.ForecastProvider", "WeatherForecast.FSharp.ForecastProvider\WeatherForecast.FSharp.ForecastProvider.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj" />
-    <ProjectReference Include="..\WeatherForecast.FSharp.ForecaastProvider\WeatherForecast.FSharp.ForecaastProvider.fsproj" />
+    <ProjectReference Include="..\WeatherForecast.FSharp.ForecastProvider\WeatherForecast.FSharp.ForecastProvider.fsproj" />
     <ProjectReference Include="..\WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj" />
   </ItemGroup>
 
