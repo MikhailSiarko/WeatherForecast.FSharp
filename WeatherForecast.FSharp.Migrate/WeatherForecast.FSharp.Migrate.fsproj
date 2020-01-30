@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Migrations\20190408_Initial.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommandLineParser" Version="2.5.0" />
+      <PackageReference Include="CommandLineParser.FSharp" Version="2.5.0" />
+      <PackageReference Include="FluentMigrator" Version="3.2.1" />
+      <PackageReference Include="FluentMigrator.Runner" Version="3.2.1" />
+      <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.2.1" />
+      <PackageReference Include="System.Data.SQLite" Version="1.0.111" />
+      <PackageReference Include="FSharp.Core" Version="4.6.2" />
+    </ItemGroup>
+
+</Project>
