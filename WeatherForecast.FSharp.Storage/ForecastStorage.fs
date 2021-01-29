@@ -192,8 +192,8 @@ module ForecastStorage =
         
         return match option with
                 | Some f -> f
-                             |> mapForecast
-                             |> Some
+                            |> mapForecast
+                            |> Some
                 | None -> None
     }
     

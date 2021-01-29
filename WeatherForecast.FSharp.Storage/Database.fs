@@ -27,7 +27,7 @@ module Database =
     let queryTo (selector: Quotations.Expr<MainSchema -> IQueryable<_>>) predicate = query {
         for u in (%selector) context.Main do
             where ((%predicate) u)
-            select (u)
+            select u
     }
     
     let select (selector: Quotations.Expr<'a -> 'b>) (queryable: IQueryable<'a>) = query {
@@ -74,5 +74,5 @@ module Database =
     
     let exists selector predicate obj =
         match table selector |> Seq.exists (predicate obj) with
-        | true -> Exists({ Value = obj })
-        | false -> New({ Value = obj })
+        | true -> Exists { Value = obj } 
+        | false -> New { Value = obj }

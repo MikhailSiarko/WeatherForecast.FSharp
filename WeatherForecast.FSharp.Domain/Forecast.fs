@@ -65,8 +65,8 @@ module Forecast =
     let validate (f, validationDate: DateTime, expiredAfter: float<min>) =
         let expirationTime = validationDate.AddMinutes(-1.0 * float expiredAfter)
         match isValid (f.Updated.ToUniversalTime()) expirationTime with
-        | true -> Valid(ValidForecast f)
-        | false -> Expired(ExpiredForecast f)
+        | true -> Valid (ValidForecast f)
+        | false -> Expired (ExpiredForecast f)
         
     let update (ExpiredForecast expired) (ValidForecast valid) =
         match expired.City = valid.City with
