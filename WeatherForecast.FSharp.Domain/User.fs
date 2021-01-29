@@ -10,5 +10,5 @@ module User =
     let validatePassword password user =
         match password = user.Password with
         | true when isNull password -> Invalid
-        | true -> Valid(user)
+        | true -> Valid user
         | false -> Invalid

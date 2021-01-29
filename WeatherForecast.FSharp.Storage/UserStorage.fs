@@ -2,10 +2,10 @@ namespace WeatherForecast.FSharp.Storage
 
 open WeatherForecast.FSharp.Domain
 open System.Linq
-    
-module UserStorage =
-    type internal UserEntity = AppDbContext.dataContext.``main.UsersEntity``
 
+type internal UserEntity = AppDbContext.dataContext.``main.UsersEntity``
+
+module UserStorage =
     let private userLoginPredicate (login: string) (entity: UserEntity) = entity.Login.ToLower() = login.ToLower()
     
     let private saveExistingUserAsync (existing: ExistingEntity<User>) = async {
@@ -35,7 +35,7 @@ module UserStorage =
                             <@ fun u -> u.Login.ToLower() = login.ToLower() @>
                             
         return match option with
-               | Some u -> Some({ Id = u.Id; Password = u.Password; Login = u.Login })
+               | Some u -> Some { Id = u.Id; Password = u.Password; Login = u.Login }
                | None -> None
     }
     

@@ -1,21 +1,23 @@
-module ForecastStorage
+namespace WeatherForecast.FSharp.Storage
+
+type internal ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
+
+type internal ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
+
+type internal ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
+
+type internal MainEntity = AppDbContext.dataContext.``main.MainsEntity``
+
+type internal WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
+
+type internal WindEntity = AppDbContext.dataContext.``main.WindsEntity``
+
+module ForecastStorage =
     open System.Linq
     open WeatherForecast.FSharp.Storage
     open WeatherForecast.FSharp.Domain
     open FSharp.Data.Sql
     open System
-
-    type internal ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
-    
-    type internal ForecastItemEntity = AppDbContext.dataContext.``main.ForecastItemsEntity``
-    
-    type internal ForecastTimeItemEntity = AppDbContext.dataContext.``main.ForecastTimeItemsEntity``
-    
-    type internal MainEntity = AppDbContext.dataContext.``main.MainsEntity``
-    
-    type internal WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
-    
-    type internal WindEntity = AppDbContext.dataContext.``main.WindsEntity``
 
     let private forecastLocationPredicate (location: string) (forecastEntity: ForecastEntity) =
         forecastEntity.Location.ToLower() = location.ToLower()
@@ -200,7 +202,6 @@ module ForecastStorage
                 | Exists f ->
                     deleteForecastItemsAsync f.Value.Id
                     |> Async.RunSynchronously
-                    |> ignore
                     |> Database.saveUpdatesAsync
                     |> Async.RunSynchronously
                     updateExistingForecastAsync f

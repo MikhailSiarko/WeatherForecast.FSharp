@@ -6,7 +6,7 @@ open FSharp.Data.Sql.Common
 open System.Linq
 
 type internal AppDbContext = SqlDataProvider<
-                                Common.DatabaseProviderTypes.SQLITE,
+                                DatabaseProviderTypes.SQLITE,
                                 SQLiteLibrary = SQLiteLibrary.SystemDataSQLite,
                                 ConnectionString = Literals.ConnectionString,
                                 ResolutionPath = Literals.ResPath>

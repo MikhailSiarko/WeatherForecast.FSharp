@@ -2,6 +2,7 @@ namespace WeatherForecast.FSharp.API.Modules
 
 open System
 open WeatherForecast.FSharp.Domain
+open WeatherForecast.FSharp.Storage
 
 module WeatherForecast =
     let private requestForecastAsync apiKey location = async {
