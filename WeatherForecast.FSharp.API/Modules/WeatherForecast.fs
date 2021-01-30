@@ -13,7 +13,7 @@ module WeatherForecast =
     
     let private requestUpdateAsync apiKey (expired: ExpiredForecast) = async {
         let (ExpiredForecast forecast) = expired
-        let! valid = ForecastProvider.getAsync apiKey forecast.City
+        let! valid = ForecastProvider.getAsync apiKey forecast.Name
         return! valid
                 |> Forecast.update expired
                 |> ForecastStorage.saveAsync

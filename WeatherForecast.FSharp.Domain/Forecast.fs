@@ -44,8 +44,8 @@ type ForecastItem = {
 
 type Forecast = {
     Id: int64;
-    CountryCode: string;
-    City: string;
+    Country: string;
+    Name: string;
     Updated: DateTime;
     Items: ForecastItem[]
 }
@@ -69,6 +69,6 @@ module Forecast =
         | false -> Expired (ExpiredForecast f)
         
     let update (ExpiredForecast expired) (ValidForecast valid) =
-        match expired.City = valid.City with
+        match expired.Name = valid.Name with
         | true -> ValidForecast { valid with Id = expired.Id }
         | false -> failwith "The forecast information is for another location"

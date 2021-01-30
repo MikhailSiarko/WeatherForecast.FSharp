@@ -3,7 +3,7 @@ module ForecastTests
     open WeatherForecast.FSharp.Domain
     open Xunit
 
-    let testForecast1 = { Id = 1L; CountryCode = "BY"; City = "Minsk"; Updated = DateTime.UtcNow; Items = [| |] }
+    let testForecast1 = { Id = 1L; Country = "BY"; Name = "Minsk"; Updated = DateTime.UtcNow; Items = [| |] }
 
     [<Fact>]
     let ``Validate Forecast. Given: Forecast Date = Now - 21 min; ExpirationTime = 20 min. ExpectedResult: Expired`` () =

@@ -48,8 +48,8 @@ module ForecastProvider
     let private map (forecast: ForecastSourceAPI.Root) =
         ValidForecast {
             Id = Unchecked.defaultof<int64>;
-            CountryCode = forecast.City.Country;
-            City = forecast.City.Name;
+            Country = forecast.City.Country;
+            Name = forecast.City.Name;
             Updated = DateTime.UtcNow;
             Items = forecast.List
                     |> Array.groupBy (fun i -> i.DtTxt.ToUniversalTime().Date)

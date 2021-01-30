@@ -51,8 +51,8 @@ module ForecastStorage =
     let private mapForecast (f: ForecastEntity) =
         {
             Id = f.Id;
-            CountryCode = f.CountryCode;
-            City = f.Location;
+            Country = f.CountryCode;
+            Name = f.Location;
             Updated = f.Created;
             Items = f.``main.ForecastItems by Id``
                     |> Seq.toArray
@@ -68,8 +68,8 @@ module ForecastStorage =
         entity.ForecastItemId <- timeItem.ForecastItemId
     
     let private fillForecast forecast (entity: ForecastEntity) =
-        entity.Location <- forecast.City
-        entity.CountryCode <- forecast.CountryCode
+        entity.Location <- forecast.Name
+        entity.CountryCode <- forecast.Country
         entity.Created <- DateTimeOffset.Now.DateTime
     
     let private fillMain main (entity: MainEntity) =
@@ -172,7 +172,7 @@ module ForecastStorage =
         let now = DateTime.UtcNow
         let! entity =  Database.singleAsync
                             <@ fun c -> c.Forecasts :> IQueryable<_> @>
-                                <@ fun f -> f.Location.ToLower() = forecast.City.ToLower() @>
+                                <@ fun f -> f.Location.ToLower() = forecast.Name.ToLower() @>
         entity.Created <- now
         do! Database.saveUpdatesAsync()
         return { existingEntity.Value with Items = items; Updated = now }
@@ -198,7 +198,7 @@ module ForecastStorage =
     }
     
     let saveAsync (ValidForecast forecast) = async {
-        return! match Database.exists (fun c -> c.Forecasts :> IQueryable<_>) (fun f -> forecastLocationPredicate f.City) forecast with
+        return! match Database.exists (fun c -> c.Forecasts :> IQueryable<_>) (fun f -> forecastLocationPredicate f.Name) forecast with
                 | Exists f ->
                     deleteForecastItemsAsync f.Value.Id
                     |> Async.RunSynchronously
