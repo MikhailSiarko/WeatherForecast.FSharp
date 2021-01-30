@@ -19,6 +19,6 @@ type AccountController () =
 
     [<HttpPost("register")>]
     member this.Register([<FromBody>] registerData: RegisterData) = async {
-        let! user = Account.registerAsync (registerData.Login, registerData.Password, registerData.ConfirmPassword)
+        let! user = Account.registerAsync registerData.Login registerData.Password registerData.ConfirmPassword
         return this.Ok(user)
     }

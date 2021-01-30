@@ -9,7 +9,7 @@ module ServiceCollectionExtensions =
 
     type IServiceCollection with
         member this.AddApplicationAuthentication () =
-            if this = null then nullArg "this"
+            if isNull this then nullArg "this"
             this.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
                     fun options -> options.RequireHttpsMetadata <- false
@@ -32,7 +32,7 @@ module ApplicationBuilderExtensions =
     
     type IApplicationBuilder with
         member this.ConfigureApplicationCors () =
-            if this = null then nullArg "this"
+            if isNull this then nullArg "this"
             this.UseCors(fun builder -> builder.AllowAnyOrigin()
                                                .AllowAnyMethod()
                                                .AllowAnyHeader() |> ignore)

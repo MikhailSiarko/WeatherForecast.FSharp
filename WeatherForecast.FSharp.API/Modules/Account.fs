@@ -13,16 +13,18 @@ type AuthenticationData =
     
 type PasswordConfirmationResult = Confirmed | NotConfirmed
 
-module Account =    
+module Account =
+    let private auth = (Authentication.getAuthenticationSource >> AuthenticationData.Create)
+
     let private processUserResult login =
         function
         | Some u -> u
-        | None -> failwithf "User %s wasn't found" login
+        | None -> failwithf $"User %s{login} wasn't found"
     
     let private processPasswordValidation onValid =
         function
         | PasswordStatus.Valid user -> onValid user
-        | PasswordStatus.Invalid -> failwith "You've entered an incorrect password"
+        | Invalid -> failwith "You've entered an incorrect password"
     
     let private passwordsConfirmed (pas, conf) =
         match pas = conf with
@@ -35,8 +37,8 @@ module Account =
                | None -> { Id = Unchecked.defaultof<int64>; Login = login; Password = Encryption.encrypt password }
                          |> UserStorage.saveAsync
                          |> Async.RunSynchronously
-                         |> (Authentication.getAuthenticationSource >> AuthenticationData.Create)
-               | Some u -> failwithf "User with login %s already exists" u.Login
+                         |> auth
+               | Some u -> failwithf $"User with login %s{u.Login} already exists"
     }
     
     let loginAsync (credentials: Credentials) = async {
@@ -44,10 +46,10 @@ module Account =
         return userOption
             |> processUserResult credentials.Login
             |> (Encryption.encrypt >> User.validatePassword) credentials.Password
-            |> processPasswordValidation (Authentication.getAuthenticationSource >> AuthenticationData.Create)
+            |> processPasswordValidation auth
     }
         
-    let registerAsync (login: string, password: string, confirmPassword) = async {
+    let registerAsync login password confirmPassword = async {
         return! match passwordsConfirmed (password, confirmPassword) with
                 | Confirmed -> registerUserAsync login password
                 | NotConfirmed -> failwith "Password is not confirmed"        

@@ -6,8 +6,6 @@ open Newtonsoft.Json
 open System
 open System.Threading.Tasks
 
-type Error = { ErrorMessage: string  }
-
 type ExceptionHandlingMiddleware (next: RequestDelegate) =
     member this.InvokeAsync(context: HttpContext) : Task =
         async {
@@ -23,5 +21,5 @@ type ExceptionHandlingMiddleware (next: RequestDelegate) =
     member private __.HandleExceptionAsync (context: HttpContext) message =
         context.Response.ContentType <- HttpContentTypes.Json;
         context.Response.StatusCode <- StatusCodes.Status500InternalServerError
-        let result = JsonConvert.SerializeObject({ ErrorMessage = message });
+        let result = JsonConvert.SerializeObject {|ErrorMessage = message |};
         context.Response.WriteAsync(result) |> Async.AwaitTask;

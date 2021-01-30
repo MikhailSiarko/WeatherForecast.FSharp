@@ -1,5 +1,6 @@
 namespace WeatherForecast.FSharp.API.Modules
 
+open System
 open System.Text
 open System.Security.Cryptography
 
@@ -11,11 +12,10 @@ module Encryption =
 
     let private executeAlgorithm (source: string) =
         use sh1 = new SHA1CryptoServiceProvider()
-        let sb = source.Insert(source.Length - 3, salt)
-                 |> Encoding.UTF8.GetBytes
-                 |> sh1.ComputeHash
-                 |> Array.fold (fun (b: StringBuilder) (i: byte) -> b.Append(i.ToString("X4"))) (StringBuilder())
-        sb.ToString()
+        source.Insert(source.Length - 3, salt)
+        |> Encoding.UTF8.GetBytes
+        |> sh1.ComputeHash
+        |> Array.fold (fun acc i -> acc + i.ToString("X4")) String.Empty
 
     let encrypt =
         function

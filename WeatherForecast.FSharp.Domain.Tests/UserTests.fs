@@ -12,7 +12,7 @@ module UserTests
             Assert.IsType(typeof<User>, u)
             Assert.Equal(user, u)
             Assert.True(true)
-        | PasswordStatus.Invalid -> Assert.False(true)
+        | Invalid -> Assert.False(true)
         
     [<Fact>]
     let ``Validate Credentials. Given: Login: 'm$mail.com', Password: '123456', Password to compare: '654321'; Expected Result": Invalid`` () =
@@ -21,7 +21,7 @@ module UserTests
         
         match User.validatePassword password user with
         | PasswordStatus.Valid _ -> Assert.False(true)
-        | PasswordStatus.Invalid -> Assert.True(true)
+        | Invalid -> Assert.True(true)
         
     [<Fact>]
     let ``Validate Credentials. Given: Login: 'm$mail.com', Password: '123456', Password to compare: null; Expected Result": Invalid`` () =
@@ -30,4 +30,4 @@ module UserTests
         
         match User.validatePassword password user with
         | PasswordStatus.Valid _ -> Assert.False(true)
-        | PasswordStatus.Invalid -> Assert.True(true)
+        | Invalid -> Assert.True(true)
