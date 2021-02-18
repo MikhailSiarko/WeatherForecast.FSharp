@@ -24,14 +24,14 @@ module Account =
         (Authentication.getAuthenticationSource
          >> AuthenticationData.Create)
 
-    let private processUserResult login =
+    let private check login =
         function
         | Some u -> u
         | None -> failwithf $"User %s{login} wasn't found"
 
-    let private processPasswordValidation onValid =
+    let private handlePasswordValidation user =
         function
-        | PasswordStatus.Valid user -> onValid user
+        | PasswordStatus.Valid -> user
         | Invalid -> failwith "You've entered an incorrect password"
 
     let private passwordsConfirmed (pas, conf) =
@@ -59,11 +59,13 @@ module Account =
         async {
             let! userOption = UserStorage.tryGetAsync credentials.Login
 
+            let user = userOption |> check credentials.Login
+
             return
-                userOption
-                |> processUserResult credentials.Login
+                user.Password
                 |> (Encryption.encrypt >> User.validatePassword) credentials.Password
-                |> processPasswordValidation auth
+                |> handlePasswordValidation user
+                |> auth
         }
 
     let registerAsync login password confirmPassword =

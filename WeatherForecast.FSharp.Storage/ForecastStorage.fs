@@ -243,11 +243,11 @@ module ForecastStorage =
                 | None -> None
         }
 
-    let saveAsync (ValidForecast forecast) =
+    let saveAsync forecast =
         async {
-            match ((fun (c: MainSchema) -> c.Forecasts :> IQueryable<_>),
+            match (fun (c: MainSchema) -> c.Forecasts :> IQueryable<_>),
                    (fun f -> forecastLocationPredicate f.Name),
-                   forecast) with
+                   forecast with
             | Exists f ->
                 do! deleteForecastItemsAsync f.Id
                 do! saveUpdatesAsync ()

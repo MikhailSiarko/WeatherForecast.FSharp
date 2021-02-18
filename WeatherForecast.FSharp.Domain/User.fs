@@ -8,12 +8,12 @@ type User =
       Password: string }
 
 type PasswordStatus =
-    | Valid of User
+    | Valid
     | Invalid
 
 module User =
-    let validatePassword password user =
-        match password = user.Password with
-        | true when isNull password -> Invalid
-        | true -> Valid user
+    let validatePassword enteredPassword userPassword =
+        match enteredPassword = userPassword with
+        | true when isNull enteredPassword -> Invalid
+        | true -> Valid
         | false -> Invalid

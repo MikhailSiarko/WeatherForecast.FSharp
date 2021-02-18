@@ -37,20 +37,19 @@ let private mapTimeItem (r: ForecastSourceAPI.List) =
       Wind = mapWind r.Wind }
 
 let private map (forecast: ForecastSourceAPI.Root) =
-    ValidForecast
-        { Id = Unchecked.defaultof<int64>
-          Country = forecast.City.Country
-          Name = forecast.City.Name
-          Updated = DateTime.UtcNow
-          Items =
-              forecast.List
-              |> Array.groupBy (fun i -> i.DtTxt.ToUniversalTime().Date)
-              |> Array.map
-                  (fun (date, items) ->
-                      { Id = Unchecked.defaultof<int64>
-                        ForecastId = Unchecked.defaultof<int64>
-                        Date = date.ToUniversalTime()
-                        TimeItems = items |> Array.map mapTimeItem }) }
+    { Id = Unchecked.defaultof<int64>
+      Country = forecast.City.Country
+      Name = forecast.City.Name
+      Updated = DateTime.UtcNow
+      Items =
+          forecast.List
+          |> Array.groupBy (fun i -> i.DtTxt.ToUniversalTime().Date)
+          |> Array.map
+              (fun (date, items) ->
+                  { Id = Unchecked.defaultof<int64>
+                    ForecastId = Unchecked.defaultof<int64>
+                    Date = date.ToUniversalTime()
+                    TimeItems = items |> Array.map mapTimeItem }) }
 
 let getAsync apiKey location =
     async {

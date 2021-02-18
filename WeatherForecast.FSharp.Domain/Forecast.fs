@@ -44,14 +44,9 @@ type Forecast =
       Name: string
       Updated: DateTime
       Items: ForecastItem [] }
-
-type ValidForecast = ValidForecast of Forecast
-
-type ExpiredForecast = ExpiredForecast of Forecast
-
 type ForecastState =
-    | Valid of ValidForecast
-    | Expired of ExpiredForecast
+    | Valid
+    | Expired
 
 [<Measure>]
 type min
@@ -59,15 +54,7 @@ type min
 module Forecast =
     let private isValid date expTime = date >= expTime
 
-    let validate forecast (validationDate: DateTime) (expiredAfter: float<min>) =
-        let expirationTime =
-            validationDate.AddMinutes(-1.0 * float expiredAfter)
-
-        match isValid (forecast.Updated.ToUniversalTime()) expirationTime with
-        | true -> Valid(ValidForecast forecast)
-        | false -> Expired(ExpiredForecast forecast)
-
-    let update (ExpiredForecast expired) (ValidForecast valid) =
-        match expired.Name = valid.Name with
-        | true -> ValidForecast { valid with Id = expired.Id }
-        | false -> failwith "The forecast information is for another location"
+    let validate lastUpdateDate expirationDate =
+        match isValid lastUpdateDate expirationDate with
+        | true -> Valid
+        | false -> Expired

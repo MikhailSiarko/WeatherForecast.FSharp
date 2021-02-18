@@ -56,7 +56,7 @@ module UserStorage =
 
     let saveAsync (user: User) =
         async {
-            match ((fun (c: MainSchema) -> c.Users :> IQueryable<_>), (fun u -> userLoginPredicate u.Login), user) with
+            match (fun (c: MainSchema) -> c.Users :> IQueryable<_>), (fun u -> userLoginPredicate u.Login), user with
             | Exists u -> return! saveExistingUserAsync u
             | New u -> return! saveNewUserAsync u
         }
