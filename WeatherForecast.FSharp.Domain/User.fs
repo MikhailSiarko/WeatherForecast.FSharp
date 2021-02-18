@@ -2,9 +2,14 @@ namespace WeatherForecast.FSharp.Domain
 
 type Credentials = { Login: string; Password: string }
 
-type User = { Id: int64; Login: string; Password: string }
+type User =
+    { Id: int64
+      Login: string
+      Password: string }
 
-type PasswordStatus = Valid of User | Invalid
+type PasswordStatus =
+    | Valid of User
+    | Invalid
 
 module User =
     let validatePassword password user =

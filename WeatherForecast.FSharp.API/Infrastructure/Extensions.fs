@@ -8,31 +8,37 @@ module ServiceCollectionExtensions =
     open Microsoft.Extensions.DependencyInjection
 
     type IServiceCollection with
-        member this.AddApplicationAuthentication () =
+        member this.AddApplicationAuthentication() =
             if isNull this then nullArg "this"
-            this.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(
-                    fun options -> options.RequireHttpsMetadata <- false
-                                   options.TokenValidationParameters <-
-                                        TokenValidationParameters
-                                            (
-                                                ValidateIssuer = true,
-                                                ValidIssuer = JwtOptions.Issuer,
-                                                ValidateAudience = true,
-                                                ValidAudience = JwtOptions.Audience,
-                                                ValidateLifetime = true,
-                                                IssuerSigningKey = JwtOptions.SymmetricSecurityKey,
-                                                ValidateIssuerSigningKey = true
-                                            )
-                             )
+
+            this
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(fun options ->
+                    options.RequireHttpsMetadata <- false
+
+                    options.TokenValidationParameters <-
+                        TokenValidationParameters(
+                            ValidateIssuer = true,
+                            ValidIssuer = JwtOptions.Issuer,
+                            ValidateAudience = true,
+                            ValidAudience = JwtOptions.Audience,
+                            ValidateLifetime = true,
+                            IssuerSigningKey = JwtOptions.SymmetricSecurityKey,
+                            ValidateIssuerSigningKey = true
+                        ))
 
 [<AutoOpen>]
 module ApplicationBuilderExtensions =
     open Microsoft.AspNetCore.Builder
-    
+
     type IApplicationBuilder with
-        member this.ConfigureApplicationCors () =
+        member this.ConfigureApplicationCors() =
             if isNull this then nullArg "this"
-            this.UseCors(fun builder -> builder.AllowAnyOrigin()
-                                               .AllowAnyMethod()
-                                               .AllowAnyHeader() |> ignore)
+
+            this.UseCors
+                (fun builder ->
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                    |> ignore)

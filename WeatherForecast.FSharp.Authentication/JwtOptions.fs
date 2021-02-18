@@ -11,4 +11,6 @@ module JwtOptions =
     let Issuer = options.Issuer
     let Audience = options.Audience
     let Lifetime = options.Lifetime
-    let SymmetricSecurityKey = SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Key))
+
+    let SymmetricSecurityKey =
+        SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Key))

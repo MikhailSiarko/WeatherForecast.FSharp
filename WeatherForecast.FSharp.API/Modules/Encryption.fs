@@ -12,6 +12,7 @@ module Encryption =
 
     let private executeAlgorithm (source: string) =
         use sh1 = new SHA1CryptoServiceProvider()
+
         source.Insert(source.Length - 3, salt)
         |> Encoding.UTF8.GetBytes
         |> sh1.ComputeHash
