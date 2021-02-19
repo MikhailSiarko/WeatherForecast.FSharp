@@ -209,7 +209,7 @@ module ForecastStorage =
 
             let! entity =
                 singleAsync
-                    <@ fun c -> c.Forecasts :> IQueryable<_> @>
+                    <@ fun c -> c.Forecasts @>
                     <@ fun f -> f.Location.ToLower() = forecast.Name.ToLower() @>
 
             entity.Created <- DateTime.UtcNow
@@ -224,7 +224,7 @@ module ForecastStorage =
     let private deleteForecastItemsAsync forecastId =
         async {
             let! _ =
-                queryTo <@ fun c -> c.ForecastItems :> IQueryable<_> @> <@ fun i -> i.ForecastId = forecastId @>
+                queryTo <@ fun c -> c.ForecastItems @> <@ fun i -> i.ForecastId = forecastId @>
                 |> Seq.``delete all items from single table``
 
             return ()
@@ -234,7 +234,7 @@ module ForecastStorage =
         async {
             let! option =
                 trySingleAsync
-                    <@ fun m -> m.Forecasts :> IQueryable<_> @>
+                    <@ fun m -> m.Forecasts @>
                     <@ fun f -> f.Location.ToLower() = location.ToLower() @>
 
             return
@@ -245,7 +245,7 @@ module ForecastStorage =
 
     let saveAsync forecast =
         async {
-            match (fun (c: MainSchema) -> c.Forecasts :> IQueryable<_>),
+            match (fun (c: MainSchema) -> c.Forecasts),
                    (fun f -> forecastLocationPredicate f.Name),
                    forecast with
             | Exists f ->
