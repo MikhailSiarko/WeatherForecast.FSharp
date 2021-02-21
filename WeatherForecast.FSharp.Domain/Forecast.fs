@@ -44,6 +44,7 @@ type Forecast =
       Name: string
       Updated: DateTime
       Items: ForecastItem [] }
+
 type ForecastState =
     | Valid
     | Expired

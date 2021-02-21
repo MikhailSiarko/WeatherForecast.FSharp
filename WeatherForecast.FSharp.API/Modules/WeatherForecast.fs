@@ -13,9 +13,6 @@ module WeatherForecast =
                 |> ForecastStorage.saveAsync
         }
 
-    let private requestUpdateAsync apiKey forecastName =
-        async { return! ForecastProvider.getAsync apiKey forecastName }
-
     let getAsync apiKey (expiredAfter: float<min>) location =
         async {
             match! ForecastStorage.tryGetAsync location with
