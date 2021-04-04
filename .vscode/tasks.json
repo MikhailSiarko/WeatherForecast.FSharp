@@ -19,6 +19,41 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "migrate",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "${workspaceFolder}/src/WeatherForecast.FSharp.Migrate/bin/Debug/net5.0/WeatherForecast.FSharp.Migrate.dll",
+                "-t",
+                "${input:migrationType}",
+                "-v",
+                "${input:migrationVersion}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+    ],
+    "inputs": [
+        {
+            "id": "migrationType",
+            "description": "Migration Type: Up or Down",
+            "default": "Up",
+            "type": "pickString",
+            "options": [
+                "Up",
+                "Down"
+            ]
+        },
+        {
+            "id": "migrationVersion",
+            "description": "Migration Version: number",
+            "default": "0",
+            "type": "promptString"
         }
     ]
 }

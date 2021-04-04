@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj" />
+      <ProjectReference Include="..\..\src\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj" />
     </ItemGroup>
 
 </Project>

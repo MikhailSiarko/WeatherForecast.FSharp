@@ -3,24 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.API", "WeatherForecast.FSharp.API\WeatherForecast.FSharp.API.fsproj", "{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.API", "src\WeatherForecast.FSharp.API\WeatherForecast.FSharp.API.fsproj", "{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.Migrate", "WeatherForecast.FSharp.Migrate\WeatherForecast.FSharp.Migrate.fsproj", "{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "WeatherForecast.FSharp.Migrate", "src\WeatherForecast.FSharp.Migrate\WeatherForecast.FSharp.Migrate.fsproj", "{F2EE15C0-8B7D-4090-B11B-04D2AA31C994}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A8361BD-BB9F-4B64-9A82-C0DAD99CCE12}"
-	ProjectSection(SolutionItems) = preProject
-		NuGet.Config = NuGet.Config
-	EndProjectSection
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain", "src\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj", "{14AEC164-D091-4147-94C7-60E03A084825}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain", "WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj", "{14AEC164-D091-4147-94C7-60E03A084825}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Storage", "src\WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj", "{3875A41E-BCC2-40B6-9687-56A9C9478BB1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Storage", "WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj", "{3875A41E-BCC2-40B6-9687-56A9C9478BB1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain.Tests", "tests\WeatherForecast.FSharp.Domain.Tests\WeatherForecast.FSharp.Domain.Tests.fsproj", "{39106170-2E27-4DE8-90FF-7EEDAE2C2974}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Domain.Tests", "WeatherForecast.FSharp.Domain.Tests\WeatherForecast.FSharp.Domain.Tests.fsproj", "{39106170-2E27-4DE8-90FF-7EEDAE2C2974}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Authentication", "src\WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj", "{936E2E47-97E2-4B61-A978-F3244E065712}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.Authentication", "WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj", "{936E2E47-97E2-4B61-A978-F3244E065712}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.ForecastProvider", "src\WeatherForecast.FSharp.ForecastProvider\WeatherForecast.FSharp.ForecastProvider.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherForecast.FSharp.ForecastProvider", "WeatherForecast.FSharp.ForecastProvider\WeatherForecast.FSharp.ForecastProvider.fsproj", "{A51EEAAB-7606-47BE-AFDF-C3F187FB55EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{90DB25F0-65D3-4B09-845E-8861C0EB3450}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +25,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90DB25F0-65D3-4B09-845E-8861C0EB3450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90DB25F0-65D3-4B09-845E-8861C0EB3450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF7BDF6F-0A8F-44AE-AB0B-8BD1C6A74AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
