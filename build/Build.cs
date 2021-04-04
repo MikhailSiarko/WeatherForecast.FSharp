@@ -17,7 +17,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -28,18 +28,18 @@ class Build : NukeBuild
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     AbsolutePath PackagesDirectory => RootDirectory / "packages";
-    
-    AbsolutePath SqlLibPath => PackagesDirectory 
-                                   / "stub.system.data.sqlite.core.netstandard" 
-                                   / "1.0.113.2" 
-                                   / "lib" 
-                                   / "netstandard2.1" 
+
+    AbsolutePath SqlLibPath => PackagesDirectory
+                                   / "stub.system.data.sqlite.core.netstandard"
+                                   / "1.0.113.2"
+                                   / "lib"
+                                   / "netstandard2.1"
                                    / SqlInteropFileName;
-    
-    AbsolutePath SqlInteropPath => PackagesDirectory 
-                               / "stub.system.data.sqlite.core.netstandard" 
-                               / "1.0.113.2" 
-                               / "runtimes" 
+
+    AbsolutePath SqlInteropPath => PackagesDirectory
+                               / "stub.system.data.sqlite.core.netstandard"
+                               / "1.0.113.2"
+                               / "runtimes"
                                / PlatformFolder
                                / "native"
                                / SqlInteropFileName;
@@ -68,7 +68,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var tests = GlobFiles(TestsDirectory, "*/bin/*/net*/*.Tests.dll").NotEmpty();
-            
+
             foreach (var test in tests)
             {
                 DotNetTest(config => config.SetProjectFile(test));
@@ -104,10 +104,10 @@ class Build : NukeBuild
                 CopyFile(SqlInteropPath, SqlLibPath);
                 Logger.Info($"The {SqlInteropFileName} has been copied");
             }
-            else 
+            else
             {
                 Logger.Info($"The {SqlInteropFileName} was already copied");
-            }   
+            }
         });
 
     Target Compile => _ => _
