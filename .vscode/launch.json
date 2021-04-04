@@ -8,7 +8,6 @@
             "name": "API",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/WeatherForecast.FSharp.API/bin/Debug/net5.0/WeatherForecast.FSharp.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/WeatherForecast.FSharp.API",

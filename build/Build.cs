@@ -17,12 +17,6 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetAfterServerBuild]
 class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
-
     public static int Main () => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -40,15 +34,34 @@ class Build : NukeBuild
                                    / "1.0.113.2" 
                                    / "lib" 
                                    / "netstandard2.1" 
-                                   / "SQLite.Interop.dll";
+                                   / SqlInteropFileName;
     
     AbsolutePath SqlInteropPath => PackagesDirectory 
                                / "stub.system.data.sqlite.core.netstandard" 
                                / "1.0.113.2" 
                                / "runtimes" 
-                               / GetPlatform()
+                               / PlatformFolder
                                / "native"
-                               / "SQLite.Interop.dll";
+                               / SqlInteropFileName;
+
+    private const string SqlInteropFileName = "SQLite.Interop.dll";
+
+    private string PlatformFolder
+    {
+        get
+        {
+            if (EnvironmentInfo.IsOsx)
+                return "osx-x64";
+
+            if (EnvironmentInfo.IsLinux)
+                return "linux-x64";
+
+            if (EnvironmentInfo.Is32Bit)
+                return "win-x86";
+
+            return "win-x64";
+        }
+    }
 
     Target Tests => _ => _
         .DependsOn(Clean, Restore, CopySqlInterop, Compile)
@@ -58,13 +71,7 @@ class Build : NukeBuild
             
             foreach (var test in tests)
             {
-                DotNetTest(config =>
-                {
-                    config = config
-                        .SetProjectFile(test);
-
-                    return config;
-                });
+                DotNetTest(config => config.SetProjectFile(test));
             }
         });
 
@@ -79,15 +86,13 @@ class Build : NukeBuild
     Target Restore => _ => _
         .Executes(() =>
         {
-            DotNetRestore(config =>
-            {
-                config = config
+            DotNetRestore(config => config
                     .SetConfigFile(RootDirectory / "NuGet.Config")
+                    .SetUseLockFile(true)
+                    .SetLockedMode(true)
                     .SetProcessWorkingDirectory(RootDirectory)
-                    .SetPackageDirectory(PackagesDirectory);
-
-                return config;
-            });
+                    .SetPackageDirectory(PackagesDirectory)
+            );
         });
 
     Target CopySqlInterop => _ => _
@@ -95,7 +100,14 @@ class Build : NukeBuild
         .Executes(() =>
         {
             if (FileExists(SqlInteropPath) && !File.Exists(SqlLibPath))
+            {
                 CopyFile(SqlInteropPath, SqlLibPath);
+                Logger.Info($"The {SqlInteropFileName} has been copied");
+            }
+            else 
+            {
+                Logger.Info($"The {SqlInteropFileName} was already copied");
+            }   
         });
 
     Target Compile => _ => _
@@ -107,18 +119,4 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .EnableNoRestore());
         });
-
-    private string GetPlatform()
-    {
-        if(EnvironmentInfo.IsOsx)
-            return "osx-x64";
-        
-        if(EnvironmentInfo.IsLinux)
-            return "linux-x64";
-        
-        if (EnvironmentInfo.Is32Bit)
-            return "win-x86";
-        
-        return "win-x64";
-    }
 }

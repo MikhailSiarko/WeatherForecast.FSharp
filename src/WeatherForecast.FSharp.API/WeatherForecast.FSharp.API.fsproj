@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TargetFramework>net5.0</TargetFramework>
+    <NoWarn>MSB3246</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
