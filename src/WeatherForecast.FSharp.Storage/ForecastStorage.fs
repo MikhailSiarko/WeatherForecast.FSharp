@@ -13,7 +13,6 @@ type internal WeatherEntity = AppDbContext.dataContext.``main.WeathersEntity``
 type internal WindEntity = AppDbContext.dataContext.``main.WindsEntity``
 
 module ForecastStorage =
-    open System.Linq
     open WeatherForecast.FSharp.Storage
     open WeatherForecast.FSharp.Domain
     open FSharp.Data.Sql

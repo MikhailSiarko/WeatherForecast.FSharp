@@ -7,7 +7,6 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -23,6 +22,7 @@ class Build : NukeBuild
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] readonly Solution Solution;
+
     [GitRepository] readonly GitRepository GitRepository;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
@@ -67,12 +67,8 @@ class Build : NukeBuild
         .DependsOn(Clean, Restore, CopySqlInterop, Compile)
         .Executes(() =>
         {
-            var tests = GlobFiles(TestsDirectory, "*/bin/*/net*/*.Tests.dll").NotEmpty();
-
-            foreach (var test in tests)
-            {
-                DotNetTest(config => config.SetProjectFile(test));
-            }
+            GlobFiles(TestsDirectory, "*/bin/*/net*/*.Tests.dll").NotEmpty()
+                .ForEach(x => DotNetTest(c => c.SetProjectFile(x)));
         });
 
     Target Clean => _ => _
@@ -88,8 +84,6 @@ class Build : NukeBuild
         {
             DotNetRestore(config => config
                     .SetConfigFile(RootDirectory / "NuGet.Config")
-                    .SetUseLockFile(true)
-                    .SetLockedMode(true)
                     .SetProcessWorkingDirectory(RootDirectory)
                     .SetPackageDirectory(PackagesDirectory)
             );
@@ -102,7 +96,6 @@ class Build : NukeBuild
             if (FileExists(SqlInteropPath) && !File.Exists(SqlLibPath))
             {
                 CopyFile(SqlInteropPath, SqlLibPath);
-                Logger.Info($"The {SqlInteropFileName} has been copied");
             }
             else
             {
