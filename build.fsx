@@ -52,7 +52,7 @@ let sqlInteropPath =
 Target.create
     "Clean"
     (fun _ ->
-        !!(srcDir @@ "/**/bin")
+        !! (srcDir @@ "/**/bin")
         ++ (srcDir @@ "/**/obj")
         ++ (testDir @@ "/**/bin")
         ++ (testDir @@ "/**/obj")
