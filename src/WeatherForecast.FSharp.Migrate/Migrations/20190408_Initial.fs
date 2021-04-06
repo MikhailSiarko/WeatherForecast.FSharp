@@ -29,35 +29,35 @@ type Initial () =
             |> ignore
 
         this.Create.Table("ForecastTimeItems")
-            .WithColumn("Id").AsInt64().Indexed("IX_ForecastTimeItems_Id").Identity().PrimaryKey("PK_ForecastTimeItems").NotNullable()
+            .WithColumn("Id").AsInt32().Indexed("IX_ForecastTimeItems_Id").Identity().PrimaryKey("PK_ForecastTimeItems").NotNullable()
             .WithColumn("Time").AsTime().NotNullable()
-            .WithColumn("ForecastItemId").AsInt64().Indexed("IX_ForecastTimeItems_ForecastItemId").ForeignKey("FK_ForecastTimeItems_ForecastItems_Id", "ForecastItems", "Id").OnDelete(Rule.Cascade).NotNullable()
+            .WithColumn("ForecastItemId").AsInt32().Indexed("IX_ForecastTimeItems_ForecastItemId").ForeignKey("FK_ForecastTimeItems_ForecastItems_Id", "ForecastItems", "Id").OnDelete(Rule.Cascade).NotNullable()
         |> ignore
 
         this.Create.Table("Mains")
-            .WithColumn("Id").AsInt64().Indexed("IX_Mains_Id").Identity().PrimaryKey("PK_Mains").NotNullable()
+            .WithColumn("Id").AsInt32().Indexed("IX_Mains_Id").Identity().PrimaryKey("PK_Mains").NotNullable()
             .WithColumn("Temp").AsDecimal().NotNullable()
             .WithColumn("MinTemp").AsDecimal().NotNullable()
             .WithColumn("MaxTemp").AsDecimal().NotNullable()
             .WithColumn("Pressure").AsDecimal().NotNullable()
             .WithColumn("Humidity").AsInt32().NotNullable()
-            .WithColumn("ForecastTimeItemId").AsInt64().Indexed("IX_Mains_ForecastTimeItemId").ForeignKey("FK_Mains_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
+            .WithColumn("ForecastTimeItemId").AsInt32().Indexed("IX_Mains_ForecastTimeItemId").ForeignKey("FK_Mains_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
         |> ignore
 
         this.Create
             .Table("Weathers")
-            .WithColumn("Id").AsInt64().Indexed("IX_Weathers_Id").Identity().PrimaryKey("PK_Weathers").NotNullable()
+            .WithColumn("Id").AsInt32().Indexed("IX_Weathers_Id").Identity().PrimaryKey("PK_Weathers").NotNullable()
             .WithColumn("Main").AsFixedLengthString(50).NotNullable()
             .WithColumn("Description").AsFixedLengthString(100).NotNullable()
             .WithColumn("Icon").AsString().Nullable()
-            .WithColumn("ForecastTimeItemId").AsInt64().Indexed("IX_Weathers_ForecastTimeItemId").ForeignKey("FK_Weathers_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
+            .WithColumn("ForecastTimeItemId").AsInt32().Indexed("IX_Weathers_ForecastTimeItemId").ForeignKey("FK_Weathers_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
         |> ignore
 
         this.Create.Table("Winds")
-            .WithColumn("Id").AsInt64().Indexed("IX_Winds_Id").Identity().PrimaryKey("PK_Winds").NotNullable()
+            .WithColumn("Id").AsInt32().Indexed("IX_Winds_Id").Identity().PrimaryKey("PK_Winds").NotNullable()
             .WithColumn("Speed").AsDecimal().NotNullable()
             .WithColumn("Degree").AsDecimal().NotNullable()
-            .WithColumn("ForecastTimeItemId").AsInt64().Indexed("IX_Winds_ForecastTimeItemId").ForeignKey("FK_Winds_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
+            .WithColumn("ForecastTimeItemId").AsInt32().Indexed("IX_Winds_ForecastTimeItemId").ForeignKey("FK_Winds_ForecastTimeItems_Id", "ForecastTimeItems", "Id").OnDelete(Rule.Cascade).NotNullable()
         |> ignore
         ()
 

@@ -1,7 +1,6 @@
 namespace WeatherForecast.FSharp.Storage
 
 open WeatherForecast.FSharp.Domain
-open System.Linq
 open Database
 
 type internal UserEntity = AppDbContext.dataContext.``main.UsersEntity``
