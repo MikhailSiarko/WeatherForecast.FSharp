@@ -92,9 +92,10 @@ Target.create
 
 open Fake.Core.TargetOperators
 
-"Clean"
-==> "Restore"
+
+"Restore"
 ==> "CopySqlInterop"
+==> "Clean"
 ==> "Build"
 ==> "Test"
 

@@ -24,7 +24,7 @@ module Database =
 
     let table selector = selector context.Main
 
-    let queryTo (selector: Quotations.Expr<MainSchema -> #IQueryable<_>>) predicate =
+    let queryTo (selector: Quotations.Expr<MainSchema -> #seq<_>>) predicate =
         query {
             for u in (%selector) context.Main do
                 where ((%predicate) u)
