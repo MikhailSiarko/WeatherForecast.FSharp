@@ -262,3 +262,7 @@ __pycache__/
 *.pyc
 .ionide
 .DS_Store
+
+#Paket dependency manager
+.paket/
+paket-files/

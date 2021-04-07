@@ -1,0 +1,7 @@
+CommandLineParser
+CommandLineParser.FSharp
+FluentMigrator
+FluentMigrator.Runner
+FluentMigrator.Runner.SQLite
+System.Data.SQLite
+FSharp.Core

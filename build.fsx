@@ -2,7 +2,8 @@
 nuget Fake.IO.FileSystem
 nuget Fake.DotNet.Cli
 nuget Fake.DotNet.Testing.XUnit2
-nuget Fake.Core.Target //"
+nuget Fake.Core.Target
+nuget Fake.DotNet.Paket //"
 #load "./.fake/build.fsx/intellisense.fsx"
 
 open Fake.Core
@@ -33,8 +34,7 @@ let getPlatformFolder () =
 let sqlLibPath =
     __SOURCE_DIRECTORY__
     </> "packages"
-    </> "stub.system.data.sqlite.core.netstandard"
-    </> "1.0.113.2"
+    </> "Stub.System.Data.SQLite.Core.NetStandard"
     </> "lib"
     </> "netstandard2.1"
     </> sqlInteropFileName
@@ -42,8 +42,7 @@ let sqlLibPath =
 let sqlInteropPath =
     __SOURCE_DIRECTORY__
     </> "packages"
-    </> "stub.system.data.sqlite.core.netstandard"
-    </> "1.0.113.2"
+    </> "Stub.System.Data.SQLite.Core.NetStandard"
     </> "runtimes"
     </> getPlatformFolder ()
     </> "native"
@@ -52,10 +51,8 @@ let sqlInteropPath =
 Target.create
     "Clean"
     (fun _ ->
-        !! (srcDir @@ "/**/bin")
-        ++ (srcDir @@ "/**/obj")
+        !!(srcDir @@ "/**/bin")
         ++ (testDir @@ "/**/bin")
-        ++ (testDir @@ "/**/obj")
         |> Shell.cleanDirs)
 
 Target.create
@@ -69,10 +66,10 @@ Target.create
 Target.create
     "Restore"
     (fun _ ->
-        DotNet.restore
+        Paket.restore
             (fun o ->
-                { o with Packages = [ "packages" ] })
-            solution)
+                { o with
+                      ToolType = ToolType.CreateCLIToolReference() }))
 
 Target.create
     "Build"

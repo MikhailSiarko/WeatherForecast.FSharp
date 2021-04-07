@@ -1,0 +1,5 @@
+FSharp.Data
+SQLProvider
+System.Data.SQLite
+System.Data.SQLite.Core
+FSharp.Core

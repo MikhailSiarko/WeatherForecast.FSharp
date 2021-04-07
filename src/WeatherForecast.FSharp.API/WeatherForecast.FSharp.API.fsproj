@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TargetFramework>net5.0</TargetFramework>
     <NoWarn>MSB3246</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="RequestData\AccountData.fs" />
     <Compile Include="Modules\Encryption.fs" />
@@ -18,19 +17,14 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
-    <PackageReference Include="FSharp.Core" Version="5.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\WeatherForecast.FSharp.Authentication\WeatherForecast.FSharp.Authentication.fsproj" />
     <ProjectReference Include="..\WeatherForecast.FSharp.ForecastProvider\WeatherForecast.FSharp.ForecastProvider.fsproj" />
     <ProjectReference Include="..\WeatherForecast.FSharp.Storage\WeatherForecast.FSharp.Storage.fsproj" />
   </ItemGroup>
-
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Samples\data.json" />
   </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

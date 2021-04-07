@@ -1,0 +1,4 @@
+Microsoft.AspNetCore.Authentication.JwtBearer
+Microsoft.Extensions.Configuration.UserSecrets
+FSharp.Core
+Newtonsoft.Json

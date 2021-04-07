@@ -10,4 +10,4 @@ module Literals =
     [<Literal>]
     let ResPath =
         __SOURCE_DIRECTORY__
-        + "/../../packages/stub.system.data.sqlite.core.netstandard/1.0.113.2/lib/netstandard2.1"
+        + "/../../packages/Stub.System.Data.SQLite.Core.NetStandard/lib/netstandard2.1"

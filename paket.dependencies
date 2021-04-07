@@ -1,0 +1,22 @@
+source https://api.nuget.org/v3/index.json
+
+storage: packages
+
+nuget CommandLineParser 2.8.0
+nuget CommandLineParser.FSharp 2.8.0
+nuget FluentMigrator 3.2.11
+nuget FluentMigrator.Runner 3.2.11
+nuget FluentMigrator.Runner.SQLite 3.2.11
+nuget FSharp.Core 5.0.0
+nuget FSharp.Data 3.3.3
+nuget Microsoft.AspNetCore.Authentication.JwtBearer 5.0.2
+nuget Microsoft.Extensions.Configuration.UserSecrets 5.0.0
+nuget Microsoft.IdentityModel.Tokens 6.8.0
+nuget Microsoft.NET.Test.Sdk 16.8.3
+nuget Newtonsoft.Json 12.0.3
+nuget SQLProvider 1.1.100
+nuget System.Data.SQLite 1.0.113.7
+nuget System.Data.SQLite.Core 1.0.113.7
+nuget System.IdentityModel.Tokens.Jwt 6.8.0
+nuget xunit 2.4.1
+nuget xunit.runner.console 2.4.1

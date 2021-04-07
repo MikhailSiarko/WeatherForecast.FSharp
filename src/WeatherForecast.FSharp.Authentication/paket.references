@@ -1,0 +1,4 @@
+FSharp.Data
+Microsoft.IdentityModel.Tokens
+System.IdentityModel.Tokens.Jwt
+FSharp.Core

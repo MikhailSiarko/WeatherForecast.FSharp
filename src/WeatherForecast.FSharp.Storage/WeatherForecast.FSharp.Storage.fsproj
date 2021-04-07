@@ -1,26 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <NoWarn>MSB3246</NoWarn>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <Compile Include="Settings.fs" />
-        <Compile Include="Database.fs" />
-        <Compile Include="ForecastStorage.fs" />
-        <Compile Include="UserStorage.fs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="FSharp.Data" Version="3.3.3" />
-      <PackageReference Include="SQLProvider" Version="1.1.100" />
-      <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
-      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj" />
-    </ItemGroup>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <NoWarn>MSB3246</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Settings.fs" />
+    <Compile Include="Database.fs" />
+    <Compile Include="ForecastStorage.fs" />
+    <Compile Include="UserStorage.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherForecast.FSharp.Domain\WeatherForecast.FSharp.Domain.fsproj" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
