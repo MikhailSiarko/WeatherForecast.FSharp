@@ -5,9 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "API",
+            "name": "Launch API",
             "type": "coreclr",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/WeatherForecast.FSharp.API/bin/Debug/net5.0/WeatherForecast.FSharp.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/WeatherForecast.FSharp.API",

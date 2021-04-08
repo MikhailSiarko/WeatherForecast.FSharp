@@ -1,4 +1,5 @@
 namespace WeatherForecast.FSharp.Storage
+open System.Linq
 
 type internal ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
 
@@ -208,7 +209,7 @@ module ForecastStorage =
 
             let! entity =
                 singleAsync
-                    <@ fun c -> c.Forecasts @>
+                    <@ fun c -> c.Forecasts :> IQueryable<_> @>
                     <@ fun f -> f.Location.ToLower() = forecast.Name.ToLower() @>
 
             entity.Created <- DateTime.UtcNow
@@ -233,7 +234,7 @@ module ForecastStorage =
         async {
             let! option =
                 trySingleAsync
-                    <@ fun m -> m.Forecasts @>
+                    <@ fun m -> m.Forecasts :> IQueryable<_> @>
                     <@ fun f -> f.Location.ToLower() = location.ToLower() @>
 
             return
@@ -244,7 +245,7 @@ module ForecastStorage =
 
     let saveAsync forecast =
         async {
-            match (fun (c: MainSchema) -> c.Forecasts),
+            match (fun (c: MainSchema) -> c.Forecasts :> IQueryable<_>),
                    (fun f -> forecastLocationPredicate f.Name),
                    forecast with
             | Exists f ->

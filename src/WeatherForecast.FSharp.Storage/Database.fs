@@ -24,7 +24,7 @@ module Database =
 
     let table selector = selector context.Main
 
-    let queryTo (selector: Quotations.Expr<MainSchema -> #seq<_>>) predicate =
+    let queryTo (selector: Quotations.Expr<MainSchema -> #IQueryable<_>>) predicate =
         query {
             for u in (%selector) context.Main do
                 where ((%predicate) u)
@@ -73,7 +73,7 @@ module Database =
             return obj
         }
 
-    let (|Exists|New|) (selector, predicate, obj) =
+    let (|Exists|New|) (selector: MainSchema -> #IQueryable<_>, predicate, obj) =
         match table selector |> Seq.exists (predicate obj) with
         | true -> Exists obj
         | false -> New obj

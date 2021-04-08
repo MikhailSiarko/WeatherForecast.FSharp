@@ -20,6 +20,38 @@
             },
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "fake",
+                "run",
+                "build.fsx"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "fake",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "fake",
+                "run",
+                "build.fsx",
+                "--target",
+                "${input:target}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
     ],
     "inputs": [
         {
@@ -37,6 +69,18 @@
             "description": "Migration Version: number",
             "default": "0",
             "type": "promptString"
+        },
+        {
+            "id": "target",
+            "description": "Fake target",
+            "type": "pickString",
+            "options": [
+                "Restore",
+                "Build",
+                "Clean",
+                "CopySqlInterop",
+                "Test"
+            ]
         }
     ]
 }

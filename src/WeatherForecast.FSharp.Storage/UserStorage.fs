@@ -2,6 +2,7 @@ namespace WeatherForecast.FSharp.Storage
 
 open WeatherForecast.FSharp.Domain
 open Database
+open System.Linq
 
 type internal UserEntity = AppDbContext.dataContext.``main.UsersEntity``
 
@@ -11,7 +12,7 @@ module UserStorage =
 
     let private saveExistingUserAsync (user: User) =
         async {
-            let! entity = singleAsync <@ fun c -> c.Users @> <@ userLoginPredicate user.Login @>
+            let! entity = singleAsync <@ fun c -> c.Users :> IQueryable<_> @> <@ userLoginPredicate user.Login @>
 
             entity.Login <- user.Login
             entity.Password <- user.Password
@@ -40,7 +41,7 @@ module UserStorage =
         async {
             let! option =
                 trySingleAsync
-                    <@ fun c -> c.Users @>
+                    <@ fun c -> c.Users :> IQueryable<_> @>
                     <@ fun u -> u.Login.ToLower() = login.ToLower() @>
 
             return
@@ -55,7 +56,7 @@ module UserStorage =
 
     let saveAsync (user: User) =
         async {
-            match (fun (c: MainSchema) -> c.Users), (fun u -> userLoginPredicate u.Login), user with
+            match (fun (c: MainSchema) -> c.Users :> IQueryable<_>), (fun u -> userLoginPredicate u.Login), user with
             | Exists u -> return! saveExistingUserAsync u
             | New u -> return! saveNewUserAsync u
         }
