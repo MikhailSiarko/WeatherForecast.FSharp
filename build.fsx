@@ -1,6 +1,6 @@
 #r "paket:
 nuget Fake.IO.FileSystem
-nuget Fake.DotNet.Cli
+nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Testing.XUnit2
 nuget Fake.Core.Target
 nuget Fake.DotNet.Paket //"
@@ -51,8 +51,7 @@ let sqlInteropPath =
 Target.create
     "Clean"
     (fun _ ->
-        !!(srcDir @@ "/**/bin")
-        ++ (testDir @@ "/**/bin")
+        !!(srcDir @@ "/**/bin") ++ (testDir @@ "/**/bin")
         |> Shell.cleanDirs)
 
 Target.create
@@ -74,11 +73,15 @@ Target.create
 Target.create
     "Build"
     (fun _ ->
-        DotNet.build
+        MSBuild.build
             (fun o ->
                 { o with
-                      NoRestore = true
-                      Configuration = DotNet.Debug })
+                      Verbosity = Some(Quiet)
+                      Targets = [ "Build" ]
+                      Properties =
+                          [ "Optimize", "False"
+                            "DebugSymbols", "True"
+                            "Configuration", "Debug" ] })
             solution)
 
 Target.create
