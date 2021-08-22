@@ -1,4 +1,5 @@
 namespace WeatherForecast.FSharp.Storage
+
 open System.Linq
 
 type internal ForecastEntity = AppDbContext.dataContext.``main.ForecastsEntity``
@@ -246,8 +247,8 @@ module ForecastStorage =
     let saveAsync forecast =
         async {
             match (fun (c: MainSchema) -> c.Forecasts :> IQueryable<_>),
-                   (fun f -> forecastLocationPredicate f.Name),
-                   forecast with
+                  (fun f -> forecastLocationPredicate f.Name),
+                  forecast with
             | Exists f ->
                 do! deleteForecastItemsAsync f.Id
                 do! saveUpdatesAsync ()

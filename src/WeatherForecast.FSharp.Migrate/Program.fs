@@ -24,7 +24,7 @@ let configureServices () =
         .AddFluentMigratorCore()
         .ConfigureRunner(fun builder ->
             builder.AddSQLite().WithGlobalConnectionString(
-                "Data Source=" + Path.Combine("..", "..", "Database.db")
+                "Data Source=" + Path.Combine(__SOURCE_DIRECTORY__, "..", "..", "Database.db")
             )
                 .ScanIn(
                 Assembly.GetExecutingAssembly()

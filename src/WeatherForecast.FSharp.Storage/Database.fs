@@ -6,11 +6,7 @@ open FSharp.Data.Sql.Common
 open System.Linq
 
 type internal AppDbContext =
-    SqlDataProvider<
-        DatabaseProviderTypes.SQLITE,
-        SQLiteLibrary=SQLiteLibrary.SystemDataSQLite,
-        ConnectionString=Literals.ConnectionString,
-        ResolutionPath=Literals.ResPath>
+    SqlDataProvider<DatabaseProviderTypes.SQLITE, SQLiteLibrary=SQLiteLibrary.SystemDataSQLite, ConnectionString=Literals.ConnectionString, ResolutionPath=Literals.ResPath>
 
 type internal MainSchema = AppDbContext.dataContext.mainSchema
 
@@ -61,7 +57,7 @@ module Database =
         async { return! predicate |> executeAsync selector }
 
     let inline add (action: 'a -> unit) (table: ^t) =
-        let entity = (^t: (member Create: unit -> 'a) table)
+        let entity = (^t: (member Create : unit -> 'a) table)
         action entity
         entity
 

@@ -7,7 +7,7 @@ open System
 open System.Threading.Tasks
 
 type ExceptionHandlingMiddleware(next: RequestDelegate) =
-    member this.InvokeAsync(context: HttpContext): Task =
+    member this.InvokeAsync(context: HttpContext) : Task =
         async {
             try
                 do! next.Invoke(context) |> Async.AwaitTask
